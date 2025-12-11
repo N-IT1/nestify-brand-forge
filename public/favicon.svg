@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <linearGradient id="nestGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#7C9A82"/>
+      <stop offset="100%" style="stop-color:#5A7D5F"/>
+    </linearGradient>
+  </defs>
+  <!-- Nest base -->
+  <ellipse cx="16" cy="22" rx="12" ry="6" fill="url(#nestGradient)"/>
+  <!-- Nest strokes -->
+  <path d="M6 20 Q16 16 26 20" stroke="#4A5D4E" stroke-width="1.5" fill="none" opacity="0.6"/>
+  <path d="M8 22 Q16 18 24 22" stroke="#4A5D4E" stroke-width="1" fill="none" opacity="0.4"/>
+  <!-- Egg -->
+  <ellipse cx="16" cy="16" rx="5" ry="7" fill="#FDF8F3"/>
+  <ellipse cx="16" cy="16" rx="5" ry="7" fill="none" stroke="#E8DDD4" stroke-width="0.5"/>
+  <!-- Egg highlight -->
+  <ellipse cx="14" cy="14" rx="1.5" ry="2" fill="white" opacity="0.6"/>
+</svg>
