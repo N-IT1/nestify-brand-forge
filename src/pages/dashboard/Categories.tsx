@@ -12,6 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Plus, FolderOpen, Loader2, Trash2, Edit } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 
 const categorySchema = z.object({
@@ -36,6 +37,7 @@ interface StoreOption {
 }
 
 export default function Categories() {
+  const { user } = useAuth();
   const { toast } = useToast();
   const [categories, setCategories] = useState<CategoryData[]>([]);
   const [stores, setStores] = useState<StoreOption[]>([]);
@@ -50,6 +52,14 @@ export default function Categories() {
   });
 
   async function fetchData() {
+    if (!user) {
+      setCategories([]);
+      setStores([]);
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
     const [categoriesResult, storesResult] = await Promise.all([
       supabase
         .from("categories")
@@ -73,7 +83,7 @@ export default function Categories() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [user?.id]);
 
   async function onSubmit(values: CategoryValues) {
     setIsSubmitting(true);

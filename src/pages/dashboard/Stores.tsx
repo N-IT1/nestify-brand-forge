@@ -48,6 +48,13 @@ export default function Stores() {
   });
 
   async function fetchStores() {
+    if (!user) {
+      setStores([]);
+      setLoading(false);
+      return;
+    }
+    
+    setLoading(true);
     const { data, error } = await supabase
       .from("stores")
       .select("id, name, description, created_at, slug, currency")
@@ -63,7 +70,7 @@ export default function Stores() {
 
   useEffect(() => {
     fetchStores();
-  }, []);
+  }, [user?.id]);
 
   async function onSubmit(values: StoreValues) {
     if (!user) return;

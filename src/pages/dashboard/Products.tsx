@@ -12,6 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Plus, Package, Loader2, Trash2, Edit, DollarSign } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 import { ImageUpload } from "@/components/dashboard/ImageUpload";
@@ -45,6 +46,7 @@ interface StoreOption {
 }
 
 export default function Products() {
+  const { user } = useAuth();
   const { toast } = useToast();
   const [products, setProducts] = useState<ProductData[]>([]);
   const [stores, setStores] = useState<StoreOption[]>([]);
@@ -59,6 +61,14 @@ export default function Products() {
   });
 
   async function fetchData() {
+    if (!user) {
+      setProducts([]);
+      setStores([]);
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
     const [productsResult, storesResult] = await Promise.all([
       supabase
         .from("products")
@@ -82,7 +92,7 @@ export default function Products() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [user?.id]);
 
   async function onSubmit(values: ProductValues) {
     setIsSubmitting(true);
