@@ -14,6 +14,7 @@ import { Plus, Package, Loader2, Trash2, Edit, DollarSign } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
+import { ImageUpload } from "@/components/dashboard/ImageUpload";
 
 const productSchema = z.object({
   store_id: z.string().min(1, "Please select a store"),
@@ -21,6 +22,7 @@ const productSchema = z.object({
   description: z.string().trim().max(1000, "Description is too long").optional(),
   price: z.coerce.number().min(0, "Price must be 0 or more"),
   inventory_count: z.coerce.number().int().min(0, "Inventory must be 0 or more"),
+  image_url: z.string().nullable().optional(),
 });
 
 type ProductValues = z.infer<typeof productSchema>;
@@ -33,6 +35,7 @@ interface ProductData {
   inventory_count: number;
   is_active: boolean;
   store_id: string;
+  image_url: string | null;
   stores: { name: string } | null;
 }
 
@@ -52,14 +55,14 @@ export default function Products() {
 
   const form = useForm<ProductValues>({
     resolver: zodResolver(productSchema),
-    defaultValues: { store_id: "", name: "", description: "", price: 0, inventory_count: 0 },
+    defaultValues: { store_id: "", name: "", description: "", price: 0, inventory_count: 0, image_url: null },
   });
 
   async function fetchData() {
     const [productsResult, storesResult] = await Promise.all([
       supabase
         .from("products")
-        .select("id, name, description, price, inventory_count, is_active, store_id, stores(name)")
+        .select("id, name, description, price, inventory_count, is_active, store_id, image_url, stores(name)")
         .order("created_at", { ascending: false }),
       supabase.from("stores").select("id, name").order("name"),
     ]);
@@ -93,6 +96,7 @@ export default function Products() {
           description: values.description || null,
           price: values.price,
           inventory_count: values.inventory_count,
+          image_url: values.image_url || null,
         })
         .eq("id", editingProduct.id);
 
@@ -112,6 +116,7 @@ export default function Products() {
         description: values.description || null,
         price: values.price,
         inventory_count: values.inventory_count,
+        image_url: values.image_url || null,
       });
 
       if (error) {
@@ -144,6 +149,7 @@ export default function Products() {
     form.setValue("description", product.description || "");
     form.setValue("price", product.price);
     form.setValue("inventory_count", product.inventory_count);
+    form.setValue("image_url", product.image_url);
     setIsDialogOpen(true);
   }
 
@@ -265,6 +271,22 @@ export default function Products() {
                       )}
                     />
                   </div>
+                  <FormField
+                    control={form.control}
+                    name="image_url"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Product Image</FormLabel>
+                        <FormControl>
+                          <ImageUpload
+                            value={field.value}
+                            onChange={field.onChange}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                   <Button type="submit" className="w-full rounded-xl" disabled={isSubmitting}>
                     {isSubmitting ? (
                       <>
@@ -320,13 +342,24 @@ export default function Products() {
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {products.map((product) => (
-              <Card key={product.id} className="bg-card/80 border-border/50 rounded-2xl hover:shadow-card transition-all group">
+              <Card key={product.id} className="bg-card/80 border-border/50 rounded-2xl hover:shadow-card transition-all group overflow-hidden">
+                {product.image_url && (
+                  <div className="aspect-video bg-secondary/50 overflow-hidden">
+                    <img
+                      src={product.image_url}
+                      alt={product.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
                 <CardHeader>
                   <div className="flex items-start justify-between">
-                    <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center">
-                      <Package className="w-6 h-6 text-muted-foreground" />
-                    </div>
-                    <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    {!product.image_url && (
+                      <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center">
+                        <Package className="w-6 h-6 text-muted-foreground" />
+                      </div>
+                    )}
+                    <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity ml-auto">
                       <Button
                         variant="ghost"
                         size="icon"

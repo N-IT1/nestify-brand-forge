@@ -9,7 +9,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Plus, Store, Loader2, Trash2, Edit } from "lucide-react";
+import { Plus, Store, Loader2, Trash2, Edit, Link2, Copy, ExternalLink, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -26,6 +26,7 @@ interface StoreData {
   name: string;
   description: string | null;
   created_at: string;
+  slug: string | null;
 }
 
 export default function Stores() {
@@ -36,6 +37,7 @@ export default function Stores() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [editingStore, setEditingStore] = useState<StoreData | null>(null);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const form = useForm<StoreValues>({
     resolver: zodResolver(storeSchema),
@@ -45,7 +47,7 @@ export default function Stores() {
   async function fetchStores() {
     const { data, error } = await supabase
       .from("stores")
-      .select("id, name, description, created_at")
+      .select("id, name, description, created_at, slug")
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -107,6 +109,42 @@ export default function Stores() {
       toast({ title: "Store deleted", description: "The store has been removed." });
       fetchStores();
     }
+  }
+
+  function generateSlug(name: string): string {
+    return name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "")
+      .substring(0, 50) + "-" + Date.now().toString(36);
+  }
+
+  async function publishStore(store: StoreData) {
+    const slug = generateSlug(store.name);
+    const { error } = await supabase
+      .from("stores")
+      .update({ slug })
+      .eq("id", store.id);
+
+    if (error) {
+      toast({ title: "Error publishing store", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Store published!", description: "Your store is now live and accessible to customers." });
+      fetchStores();
+    }
+  }
+
+  function getStoreUrl(slug: string): string {
+    return `${window.location.origin}/store/${slug}`;
+  }
+
+  async function copyStoreLink(store: StoreData) {
+    if (!store.slug) return;
+    const url = getStoreUrl(store.slug);
+    await navigator.clipboard.writeText(url);
+    setCopiedId(store.id);
+    toast({ title: "Link copied!", description: "Store link copied to clipboard." });
+    setTimeout(() => setCopiedId(null), 2000);
   }
 
   function openEditDialog(store: StoreData) {
@@ -253,10 +291,47 @@ export default function Stores() {
                     {store.description || "No description"}
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="space-y-3">
                   <p className="text-xs text-muted-foreground">
                     Created {new Date(store.created_at).toLocaleDateString()}
                   </p>
+                  {store.slug ? (
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="flex-1 rounded-full text-xs"
+                        onClick={() => copyStoreLink(store)}
+                      >
+                        {copiedId === store.id ? (
+                          <Check className="w-3 h-3 mr-1" />
+                        ) : (
+                          <Copy className="w-3 h-3 mr-1" />
+                        )}
+                        Copy Link
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="rounded-full"
+                        asChild
+                      >
+                        <a href={getStoreUrl(store.slug)} target="_blank" rel="noopener noreferrer">
+                          <ExternalLink className="w-3 h-3" />
+                        </a>
+                      </Button>
+                    </div>
+                  ) : (
+                    <Button
+                      variant="default"
+                      size="sm"
+                      className="w-full rounded-full"
+                      onClick={() => publishStore(store)}
+                    >
+                      <Link2 className="w-3 h-3 mr-1" />
+                      Publish & Get Link
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
             ))}

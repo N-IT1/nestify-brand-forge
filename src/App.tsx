@@ -11,6 +11,7 @@ import Stores from "./pages/dashboard/Stores";
 import Products from "./pages/dashboard/Products";
 import Categories from "./pages/dashboard/Categories";
 import Settings from "./pages/dashboard/Settings";
+import Storefront from "./pages/Storefront";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
             <Route path="/dashboard/products" element={<Products />} />
             <Route path="/dashboard/categories" element={<Categories />} />
             <Route path="/dashboard/settings" element={<Settings />} />
+            <Route path="/store/:slug" element={<Storefront />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
