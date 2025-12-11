@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -17,6 +18,7 @@ import { useToast } from "@/hooks/use-toast";
 const storeSchema = z.object({
   name: z.string().trim().min(2, "Store name must be at least 2 characters").max(100, "Store name is too long"),
   description: z.string().trim().max(500, "Description is too long").optional(),
+  currency: z.enum(["NGN", "USD"]),
 });
 
 type StoreValues = z.infer<typeof storeSchema>;
@@ -27,6 +29,7 @@ interface StoreData {
   description: string | null;
   created_at: string;
   slug: string | null;
+  currency: string;
 }
 
 export default function Stores() {
@@ -41,13 +44,13 @@ export default function Stores() {
 
   const form = useForm<StoreValues>({
     resolver: zodResolver(storeSchema),
-    defaultValues: { name: "", description: "" },
+    defaultValues: { name: "", description: "", currency: "NGN" },
   });
 
   async function fetchStores() {
     const { data, error } = await supabase
       .from("stores")
-      .select("id, name, description, created_at, slug")
+      .select("id, name, description, created_at, slug, currency")
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -69,7 +72,7 @@ export default function Stores() {
     if (editingStore) {
       const { error } = await supabase
         .from("stores")
-        .update({ name: values.name, description: values.description || null })
+        .update({ name: values.name, description: values.description || null, currency: values.currency })
         .eq("id", editingStore.id);
 
       if (error) {
@@ -86,6 +89,7 @@ export default function Stores() {
         user_id: user.id,
         name: values.name,
         description: values.description || null,
+        currency: values.currency,
       });
 
       if (error) {
@@ -151,6 +155,7 @@ export default function Stores() {
     setEditingStore(store);
     form.setValue("name", store.name);
     form.setValue("description", store.description || "");
+    form.setValue("currency", store.currency as "NGN" | "USD");
     setIsDialogOpen(true);
   }
 
@@ -216,6 +221,27 @@ export default function Stores() {
                             rows={3}
                           />
                         </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="currency"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Currency</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger className="rounded-xl">
+                              <SelectValue placeholder="Select currency" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="NGN">Nigerian Naira (₦)</SelectItem>
+                            <SelectItem value="USD">US Dollar ($)</SelectItem>
+                          </SelectContent>
+                        </Select>
                         <FormMessage />
                       </FormItem>
                     )}
