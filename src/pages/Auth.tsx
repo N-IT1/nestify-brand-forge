@@ -47,12 +47,20 @@ export default function Auth() {
   const signInForm = useForm<SignInValues>({
     resolver: zodResolver(signInSchema),
     defaultValues: { email: "", password: "" },
+    mode: "onChange",
   });
 
   const signUpForm = useForm<SignUpValues>({
     resolver: zodResolver(signUpSchema),
     defaultValues: { fullName: "", email: "", password: "", confirmPassword: "" },
+    mode: "onChange",
   });
+
+  const handleModeSwitch = () => {
+    setIsSignUp(!isSignUp);
+    signInForm.reset();
+    signUpForm.reset();
+  };
 
   const handleSignIn = async (values: SignInValues) => {
     setIsLoading(true);
@@ -132,7 +140,7 @@ export default function Auth() {
 
           <CardContent className="pt-6">
             {isSignUp ? (
-              <Form {...signUpForm}>
+              <Form {...signUpForm} key="signup-form">
                 <form onSubmit={signUpForm.handleSubmit(handleSignUp)} className="space-y-4">
                   <FormField
                     control={signUpForm.control}
@@ -199,7 +207,7 @@ export default function Auth() {
                 </form>
               </Form>
             ) : (
-              <Form {...signInForm}>
+              <Form {...signInForm} key="signin-form">
                 <form onSubmit={signInForm.handleSubmit(handleSignIn)} className="space-y-4">
                   <FormField
                     control={signInForm.control}
@@ -244,7 +252,7 @@ export default function Auth() {
             <div className="mt-6 text-center">
               <button
                 type="button"
-                onClick={() => setIsSignUp(!isSignUp)}
+                onClick={handleModeSwitch}
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 {isSignUp ? (
