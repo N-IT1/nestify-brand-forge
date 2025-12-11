@@ -14,8 +14,13 @@ export default function Dashboard() {
 
   useEffect(() => {
     async function fetchStats() {
-      if (!user) return;
+      if (!user) {
+        setStats({ stores: 0, products: 0 });
+        setLoading(false);
+        return;
+      }
 
+      setLoading(true);
       const [storesResult, productsResult] = await Promise.all([
         supabase.from("stores").select("id", { count: "exact", head: true }),
         supabase.from("products").select("id", { count: "exact", head: true }),
@@ -29,7 +34,7 @@ export default function Dashboard() {
     }
 
     fetchStats();
-  }, [user]);
+  }, [user?.id]);
 
   const firstName = user?.user_metadata?.full_name?.split(" ")[0] || "there";
 
