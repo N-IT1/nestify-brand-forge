@@ -11,6 +11,12 @@ import Stores from "./pages/dashboard/Stores";
 import Products from "./pages/dashboard/Products";
 import Categories from "./pages/dashboard/Categories";
 import Settings from "./pages/dashboard/Settings";
+import Analytics from "./pages/dashboard/Analytics";
+import Orders from "./pages/dashboard/Orders";
+import Customers from "./pages/dashboard/Customers";
+import Discounts from "./pages/dashboard/Discounts";
+import Marketing from "./pages/dashboard/Marketing";
+import Help from "./pages/dashboard/Help";
 import Storefront from "./pages/Storefront";
 import NotFound from "./pages/NotFound";
 
@@ -30,6 +36,12 @@ const App = () => (
             <Route path="/dashboard/stores" element={<Stores />} />
             <Route path="/dashboard/products" element={<Products />} />
             <Route path="/dashboard/categories" element={<Categories />} />
+            <Route path="/dashboard/analytics" element={<Analytics />} />
+            <Route path="/dashboard/orders" element={<Orders />} />
+            <Route path="/dashboard/customers" element={<Customers />} />
+            <Route path="/dashboard/discounts" element={<Discounts />} />
+            <Route path="/dashboard/marketing" element={<Marketing />} />
+            <Route path="/dashboard/help" element={<Help />} />
             <Route path="/dashboard/settings" element={<Settings />} />
             <Route path="/store/:slug" element={<Storefront />} />
             <Route path="*" element={<NotFound />} />
