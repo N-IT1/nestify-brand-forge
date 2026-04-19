@@ -308,7 +308,7 @@ export default function Dashboard() {
                   <li key={step.label}>
                     <Link
                       to={step.to}
-                      className="group flex items-center gap-3 p-2.5 -mx-2.5 rounded-xl hover:bg-secondary/50 transition-colors"
+                      className="group flex items-center gap-3 p-2.5 -mx-2.5 rounded-xl hover:bg-primary/5 hover:text-primary transition-all duration-200"
                     >
                       {step.done ? (
                         <CheckCircle2 className="w-5 h-5 text-nest-success shrink-0" />
@@ -381,7 +381,7 @@ export default function Dashboard() {
                     <li key={store.id}>
                       <Link
                         to="/dashboard/stores"
-                        className="group flex items-center gap-3 p-3 -mx-1 rounded-xl hover:bg-secondary/50 transition-colors"
+                        className="group flex items-center gap-3 p-3 -mx-1 rounded-xl hover:bg-primary/5 hover:border-primary/20 border border-transparent transition-all duration-200"
                       >
                         <div className="w-10 h-10 rounded-xl bg-gradient-accent flex items-center justify-center shrink-0">
                           <Store className="w-5 h-5 text-primary-foreground" />
