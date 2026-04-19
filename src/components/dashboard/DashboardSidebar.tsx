@@ -102,8 +102,8 @@ export function DashboardSidebar() {
                       <NavLink
                         to={item.url}
                         end={item.url === "/dashboard"}
-                        className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-secondary/50 transition-colors"
-                        activeClassName="bg-primary/10 text-primary font-medium"
+                        className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-primary/10 hover:text-primary transition-all duration-200"
+                        activeClassName="bg-primary/15 text-primary font-medium shadow-sm"
                       >
                         <item.icon className="w-5 h-5 shrink-0" />
                         {!collapsed && <span>{item.title}</span>}
