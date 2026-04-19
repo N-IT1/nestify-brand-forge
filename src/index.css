@@ -6,7 +6,7 @@
 
 @layer base {
   :root {
-    /* Nestify Warm Neutrals + Soft Green Theme */
+    /* Trunt Warm Neutrals + Soft Green Theme */
     --background: 40 33% 97%;
     --foreground: 0 0% 24%;
     
@@ -37,7 +37,7 @@
     
     --radius: 1rem;
     
-    /* Custom Nestify tokens */
+    /* Custom Trunt tokens */
     --nest-cream: 40 33% 97%;
     --nest-sage: 95 14% 57%;
     --nest-sand: 30 25% 90%;
