@@ -9,7 +9,7 @@ export function Footer() {
           <div className="flex flex-col items-center md:items-start gap-4">
             <Logo size="md" />
             <p className="text-muted-foreground text-sm max-w-xs text-center md:text-left">
-              Your cozy corner of commerce. Build your nest, grow your business.
+              Your trusted platform for commerce. Build your store, grow your business.
             </p>
           </div>
 
@@ -31,7 +31,7 @@ export function Footer() {
 
         <div className="mt-12 pt-8 border-t border-border/50 text-center">
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Nestify. Made with love for entrepreneurs everywhere.
+            © {new Date().getFullYear()} Trunt. Made with love for entrepreneurs everywhere.
           </p>
         </div>
       </div>

@@ -100,7 +100,7 @@ export default function Auth() {
       });
     } else {
       toast({
-        title: "Welcome to Nestify!",
+        title: "Welcome to Trunt!",
         description: "Your account has been created successfully.",
       });
     }
