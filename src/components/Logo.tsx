@@ -75,7 +75,7 @@ export function Logo({ className, size = "md", showText = true }: LogoProps) {
       </div>
       {showText && (
         <span className={cn("font-display font-bold text-foreground", textSizes[size])}>
-          Nestify
+          Trunt
         </span>
       )}
     </div>

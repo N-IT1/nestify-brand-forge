@@ -30,7 +30,7 @@ export function Hero() {
 
           {/* Subheading */}
           <p className="text-xl md:text-2xl text-muted-foreground mb-10 max-w-2xl mx-auto animate-fade-up" style={{ animationDelay: "0.2s" }}>
-            Create a beautiful online store in minutes. Nestify is where ideas hatch into successful businesses—simple, cozy, and designed for growth.
+            Create a beautiful online store in minutes. Trunt is where ideas become successful businesses—simple, powerful, and designed for growth.
           </p>
 
           {/* CTA Buttons */}

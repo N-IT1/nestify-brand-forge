@@ -23,7 +23,7 @@ export function CTA() {
           </h2>
 
           <p className="text-xl text-muted-foreground mb-10 max-w-xl mx-auto">
-            Join thousands of entrepreneurs who've built thriving businesses with Nestify. Your journey starts here.
+            Join thousands of entrepreneurs who've built thriving businesses with Trunt. Your journey starts here.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

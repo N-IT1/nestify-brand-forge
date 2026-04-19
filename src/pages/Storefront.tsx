@@ -444,7 +444,7 @@ export default function Storefront() {
       <footer className="border-t border-border py-10 mt-16 bg-card/50">
         <div className="max-w-6xl mx-auto px-4 text-center">
           <p className="text-sm text-muted-foreground">
-            Powered by <Link to="/" className="text-primary font-medium hover:underline">Nestify</Link>
+            Powered by <Link to="/" className="text-primary font-medium hover:underline">Trunt</Link>
           </p>
         </div>
       </footer>

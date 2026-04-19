@@ -6,7 +6,7 @@ const testimonials = [
   {
     name: "Sarah Mitchell",
     role: "Handmade Jewelry Store",
-    content: "Nestify made it so easy to launch my jewelry store. I went from idea to selling in just one afternoon. The whole experience felt like coming home.",
+    content: "Trunt made it so easy to launch my jewelry store. I went from idea to selling in just one afternoon. The whole experience felt seamless and professional.",
     initials: "SM",
   },
   {
@@ -18,7 +18,7 @@ const testimonials = [
   {
     name: "Emma Rodriguez",
     role: "Organic Skincare",
-    content: "The support team is incredible—they really care about helping you succeed. My business has grown 300% since switching to Nestify!",
+    content: "The support team is incredible—they really care about helping you succeed. My business has grown 300% since switching to Trunt!",
     initials: "ER",
   },
 ];
