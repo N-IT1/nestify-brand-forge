@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MarketplaceNavbar } from "@/components/marketplace/MarketplaceNavbar";
+import { MarketplaceMobileNav } from "@/components/marketplace/MarketplaceMobileNav";
 import { CartDrawer } from "@/components/marketplace/CartDrawer";
 import { Footer } from "@/components/landing/Footer";
 import { useCart, formatPrice, CartProduct } from "@/contexts/CartContext";
@@ -102,7 +103,7 @@ export default function Marketplace() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="min-h-screen flex flex-col bg-background pb-16 md:pb-0">
       <MarketplaceNavbar searchValue={search} onSearchChange={setSearch} />
       <CartDrawer />
 
@@ -285,6 +286,7 @@ export default function Marketplace() {
       </main>
 
       <Footer />
+      <MarketplaceMobileNav />
     </div>
   );
 }
