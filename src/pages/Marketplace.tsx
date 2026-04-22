@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Package, Store as StoreIcon, Sparkles, ArrowRight } from "lucide-react";
+import { Loader2, Package, Store as StoreIcon, ArrowRight, ShieldCheck, Truck, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -106,38 +106,59 @@ export default function Marketplace() {
       <MarketplaceNavbar searchValue={search} onSearchChange={setSearch} />
       <CartDrawer />
 
-      {/* Slim hero */}
+      {/* Premium hero */}
       <section className="relative overflow-hidden border-b border-border/40">
         <div className="absolute inset-0 bg-gradient-hero" />
-        <div className="absolute -top-24 -left-20 w-72 h-72 bg-primary/15 rounded-full blur-3xl" />
-        <div className="absolute -bottom-24 -right-20 w-80 h-80 bg-accent/15 rounded-full blur-3xl" />
-        <div className="container mx-auto px-4 py-10 md:py-14 relative z-10">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+        <div className="absolute -top-24 -left-20 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
+        <div className="absolute -bottom-24 -right-20 w-80 h-80 bg-accent/10 rounded-full blur-3xl" />
+        <div className="container mx-auto px-4 py-10 md:py-16 relative z-10">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8">
             <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/80 backdrop-blur-sm border border-border/50 mb-4">
-                <Sparkles className="w-3.5 h-3.5 text-primary" />
-                <span className="text-xs font-medium">Discover great products from independent sellers</span>
-              </div>
-              <h1 className="text-3xl md:text-5xl font-display font-bold text-foreground mb-3">
-                Shop everything on <span className="text-gradient">Trunt</span>
+              <span className="text-xs font-semibold tracking-[0.2em] uppercase text-primary mb-4 block">
+                The Trunt Marketplace
+              </span>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-foreground mb-4 leading-[1.05]">
+                Curated goods from <span className="text-gradient">independent sellers</span>.
               </h1>
-              <p className="text-muted-foreground text-base md:text-lg">
-                Thousands of products from trusted sellers — all in one place.
+              <p className="text-muted-foreground text-base md:text-lg max-w-xl">
+                Discover thoughtfully made products from trusted brands — shipped fast, priced fair.
               </p>
             </div>
-            <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex flex-col sm:flex-row gap-3 shrink-0">
               <Button asChild size="lg" className="rounded-full px-7 h-12 shadow-soft">
                 <Link to={user ? "/dashboard" : "/auth?mode=signup&seller=1"}>
                   <StoreIcon className="w-4 h-4 mr-2" />
-                  Become a Seller
+                  Sell on Trunt
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg" className="rounded-full px-7 h-12 bg-background/60">
                 <Link to="/about">
-                  Why Trunt?
+                  Learn more
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Link>
               </Button>
+            </div>
+          </div>
+
+          {/* Trust strip */}
+          <div className="mt-10 pt-6 border-t border-border/40 grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+            <div className="flex items-center gap-3 text-muted-foreground">
+              <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
+                <ShieldCheck className="w-4 h-4 text-primary" />
+              </div>
+              <span><span className="text-foreground font-medium">Verified sellers</span> · shop with confidence</span>
+            </div>
+            <div className="flex items-center gap-3 text-muted-foreground">
+              <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
+                <Truck className="w-4 h-4 text-primary" />
+              </div>
+              <span><span className="text-foreground font-medium">Fast delivery</span> · across Nigeria</span>
+            </div>
+            <div className="flex items-center gap-3 text-muted-foreground">
+              <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
+                <Tag className="w-4 h-4 text-primary" />
+              </div>
+              <span><span className="text-foreground font-medium">Fair pricing</span> · direct from brands</span>
             </div>
           </div>
         </div>
