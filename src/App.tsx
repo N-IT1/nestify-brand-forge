@@ -36,22 +36,23 @@ const App = () => (
               <Route path="/" element={<Marketplace />} />
               <Route path="/about" element={<About />} />
               <Route path="/auth" element={<Auth />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/dashboard/stores" element={<Stores />} />
-            <Route path="/dashboard/products" element={<Products />} />
-            <Route path="/dashboard/categories" element={<Categories />} />
-            <Route path="/dashboard/analytics" element={<Analytics />} />
-            <Route path="/dashboard/orders" element={<Orders />} />
-            <Route path="/dashboard/customers" element={<Customers />} />
-            <Route path="/dashboard/discounts" element={<Discounts />} />
-            <Route path="/dashboard/marketing" element={<Marketing />} />
-            <Route path="/dashboard/help" element={<Help />} />
-            <Route path="/dashboard/settings" element={<Settings />} />
-            <Route path="/store/:slug" element={<Storefront />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/dashboard/stores" element={<Stores />} />
+              <Route path="/dashboard/products" element={<Products />} />
+              <Route path="/dashboard/categories" element={<Categories />} />
+              <Route path="/dashboard/analytics" element={<Analytics />} />
+              <Route path="/dashboard/orders" element={<Orders />} />
+              <Route path="/dashboard/customers" element={<Customers />} />
+              <Route path="/dashboard/discounts" element={<Discounts />} />
+              <Route path="/dashboard/marketing" element={<Marketing />} />
+              <Route path="/dashboard/help" element={<Help />} />
+              <Route path="/dashboard/settings" element={<Settings />} />
+              <Route path="/store/:slug" element={<Storefront />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </CartProvider>
     </AuthProvider>
   </QueryClientProvider>
 );
