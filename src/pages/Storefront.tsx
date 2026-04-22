@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MarketplaceNavbar } from "@/components/marketplace/MarketplaceNavbar";
+import { MarketplaceMobileNav } from "@/components/marketplace/MarketplaceMobileNav";
 import { CartDrawer } from "@/components/marketplace/CartDrawer";
 import { useCart, formatPrice, CartProduct } from "@/contexts/CartContext";
 
@@ -141,7 +142,7 @@ export default function Storefront() {
   const currency = store?.currency || "NGN";
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-background to-secondary/20">
+    <div className="min-h-screen bg-gradient-to-b from-background via-background to-secondary/20 pb-16 md:pb-0">
       <MarketplaceNavbar />
       <CartDrawer />
 
@@ -289,6 +290,7 @@ export default function Storefront() {
           </p>
         </div>
       </footer>
+      <MarketplaceMobileNav />
     </div>
   );
 }

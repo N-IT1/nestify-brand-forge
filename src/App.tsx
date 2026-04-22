@@ -20,6 +20,7 @@ import Discounts from "./pages/dashboard/Discounts";
 import Marketing from "./pages/dashboard/Marketing";
 import Help from "./pages/dashboard/Help";
 import Storefront from "./pages/Storefront";
+import StoresDirectory from "./pages/Stores";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -35,6 +36,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Marketplace />} />
               <Route path="/about" element={<About />} />
+              <Route path="/stores" element={<StoresDirectory />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/dashboard/stores" element={<Stores />} />
