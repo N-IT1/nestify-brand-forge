@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Package, ShoppingBag, ArrowLeft, ShoppingCart, X, Minus, Plus, Sparkles } from "lucide-react";
+import { Loader2, Package, ShoppingBag, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { MarketplaceNavbar } from "@/components/marketplace/MarketplaceNavbar";
+import { CartDrawer } from "@/components/marketplace/CartDrawer";
+import { useCart, formatPrice, CartProduct } from "@/contexts/CartContext";
 
 interface Store {
   id: string;
@@ -14,6 +16,7 @@ interface Store {
   theme_color: string | null;
   logo_url: string | null;
   currency: string;
+  slug: string | null;
 }
 
 interface Product {
@@ -33,29 +36,15 @@ interface Category {
   name: string;
 }
 
-interface CartItem {
-  product: Product;
-  quantity: number;
-}
-
-function formatPrice(price: number, currency: string): string {
-  if (currency === 'NGN') {
-    return `₦${price.toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-  }
-  return `$${price.toFixed(2)}`;
-}
-
 export default function Storefront() {
   const { slug } = useParams<{ slug: string }>();
+  const { addToCart } = useCart();
   const [store, setStore] = useState<Store | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
-  const [cart, setCart] = useState<CartItem[]>([]);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
 
   useEffect(() => {
     async function fetchStore() {
@@ -67,7 +56,7 @@ export default function Storefront() {
 
       const { data: storeData, error: storeError } = await supabase
         .from("stores")
-        .select("id, name, description, theme_color, logo_url, currency")
+        .select("id, name, description, theme_color, logo_url, currency, slug")
         .eq("slug", slug)
         .maybeSingle();
 
@@ -93,7 +82,7 @@ export default function Storefront() {
           .order("name"),
       ]);
 
-      setProducts(productsResult.data || []);
+      setProducts((productsResult.data as Product[]) || []);
       setCategories(categoriesResult.data || []);
       setLoading(false);
     }
@@ -105,45 +94,20 @@ export default function Storefront() {
     ? products.filter((p) => p.category_id === selectedCategory)
     : products;
 
-  const addToCart = (product: Product) => {
-    setCart((prev) => {
-      const existing = prev.find((item) => item.product.id === product.id);
-      if (existing) {
-        return prev.map((item) =>
-          item.product.id === product.id
-            ? { ...item, quantity: Math.min(item.quantity + 1, product.inventory_count) }
-            : item
-        );
-      }
-      return [...prev, { product, quantity: 1 }];
-    });
-  };
-
-  const updateQuantity = (productId: string, delta: number) => {
-    setCart((prev) =>
-      prev
-        .map((item) => {
-          if (item.product.id === productId) {
-            const newQuantity = item.quantity + delta;
-            if (newQuantity <= 0) return null;
-            return { ...item, quantity: Math.min(newQuantity, item.product.inventory_count) };
-          }
-          return item;
-        })
-        .filter(Boolean) as CartItem[]
-    );
-  };
-
-  const removeFromCart = (productId: string) => {
-    setCart((prev) => prev.filter((item) => item.product.id !== productId));
-  };
-
-  const cartTotal = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
-  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-
-  const handleCheckout = () => {
-    setIsCartOpen(false);
-    setIsCheckoutModalOpen(true);
+  const handleAdd = (product: Product) => {
+    if (!store) return;
+    const cartProduct: CartProduct = {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image_url: product.image_url,
+      inventory_count: product.inventory_count,
+      store_id: store.id,
+      store_name: store.name,
+      store_slug: store.slug,
+      currency: store.currency,
+    };
+    addToCart(cartProduct);
   };
 
   if (loading) {
@@ -167,32 +131,24 @@ export default function Storefront() {
         <Button asChild className="rounded-full">
           <Link to="/">
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Go to Homepage
+            Back to Marketplace
           </Link>
         </Button>
       </div>
     );
   }
 
-  const currency = store?.currency || 'NGN';
+  const currency = store?.currency || "NGN";
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-secondary/20">
-      {/* Floating Cart Button */}
-      {cartCount > 0 && (
-        <button
-          onClick={() => setIsCartOpen(true)}
-          className="fixed bottom-6 right-6 z-50 bg-primary text-primary-foreground rounded-full p-4 shadow-2xl hover:scale-105 transition-transform flex items-center gap-2"
-        >
-          <ShoppingCart className="w-6 h-6" />
-          <span className="font-bold">{cartCount}</span>
-        </button>
-      )}
+      <MarketplaceNavbar />
+      <CartDrawer />
 
       {/* Store Header */}
-      <header 
+      <header
         className="relative py-16 px-4 overflow-hidden"
-        style={{ backgroundColor: store?.theme_color || 'hsl(var(--primary))' }}
+        style={{ backgroundColor: store?.theme_color || "hsl(var(--primary))" }}
       >
         <div className="absolute inset-0 bg-black/10" />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/20" />
@@ -262,8 +218,8 @@ export default function Storefront() {
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {filteredProducts.map((product) => (
-              <Card 
-                key={product.id} 
+              <Card
+                key={product.id}
                 className="bg-card border-0 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 group"
               >
                 <div className="aspect-square bg-gradient-to-br from-secondary/50 to-secondary relative overflow-hidden">
@@ -309,11 +265,11 @@ export default function Storefront() {
                     <span className="text-2xl font-bold text-foreground">
                       {formatPrice(product.price, currency)}
                     </span>
-                    <Button 
-                      size="sm" 
+                    <Button
+                      size="sm"
                       className="rounded-full px-5 shadow-md"
                       disabled={product.inventory_count === 0}
-                      onClick={() => addToCart(product)}
+                      onClick={() => handleAdd(product)}
                     >
                       {product.inventory_count > 0 ? "Add to Cart" : "Sold Out"}
                     </Button>
@@ -324,121 +280,6 @@ export default function Storefront() {
           </div>
         )}
       </main>
-
-      {/* Cart Drawer */}
-      <Dialog open={isCartOpen} onOpenChange={setIsCartOpen}>
-        <DialogContent className="sm:max-w-lg rounded-3xl max-h-[90vh] overflow-hidden flex flex-col">
-          <DialogHeader>
-            <DialogTitle className="font-display text-2xl flex items-center gap-2">
-              <ShoppingCart className="w-6 h-6" />
-              Your Cart
-            </DialogTitle>
-            <DialogDescription>
-              {cartCount} {cartCount === 1 ? 'item' : 'items'} in your cart
-            </DialogDescription>
-          </DialogHeader>
-          
-          {cart.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-12">
-              <ShoppingCart className="w-16 h-16 text-muted-foreground/30 mb-4" />
-              <p className="text-muted-foreground">Your cart is empty</p>
-            </div>
-          ) : (
-            <>
-              <div className="flex-1 overflow-y-auto space-y-4 py-4">
-                {cart.map((item) => (
-                  <div key={item.product.id} className="flex gap-4 p-3 bg-secondary/30 rounded-2xl">
-                    <div className="w-20 h-20 rounded-xl overflow-hidden bg-secondary flex-shrink-0">
-                      {item.product.image_url ? (
-                        <img src={item.product.image_url} alt={item.product.name} className="w-full h-full object-cover" />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          <Package className="w-8 h-8 text-muted-foreground/50" />
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-semibold line-clamp-1">{item.product.name}</h4>
-                      <p className="text-sm text-muted-foreground">
-                        {formatPrice(item.product.price, currency)}
-                      </p>
-                      <div className="flex items-center gap-2 mt-2">
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-8 w-8 rounded-full"
-                          onClick={() => updateQuantity(item.product.id, -1)}
-                        >
-                          <Minus className="w-4 h-4" />
-                        </Button>
-                        <span className="font-medium w-8 text-center">{item.quantity}</span>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-8 w-8 rounded-full"
-                          onClick={() => updateQuantity(item.product.id, 1)}
-                          disabled={item.quantity >= item.product.inventory_count}
-                        >
-                          <Plus className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-end justify-between">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 text-muted-foreground hover:text-destructive"
-                        onClick={() => removeFromCart(item.product.id)}
-                      >
-                        <X className="w-4 h-4" />
-                      </Button>
-                      <span className="font-bold">
-                        {formatPrice(item.product.price * item.quantity, currency)}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              
-              <div className="border-t pt-4 space-y-4">
-                <div className="flex items-center justify-between text-lg">
-                  <span className="font-medium">Total</span>
-                  <span className="font-bold text-2xl">{formatPrice(cartTotal, currency)}</span>
-                </div>
-                <Button 
-                  className="w-full rounded-full h-12 text-lg shadow-lg"
-                  onClick={handleCheckout}
-                >
-                  Proceed to Checkout
-                </Button>
-              </div>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
-
-      {/* Checkout Coming Soon Modal */}
-      <Dialog open={isCheckoutModalOpen} onOpenChange={setIsCheckoutModalOpen}>
-        <DialogContent className="sm:max-w-md rounded-3xl text-center">
-          <div className="flex flex-col items-center py-6">
-            <div className="w-20 h-20 rounded-full bg-gradient-accent flex items-center justify-center mb-6">
-              <Sparkles className="w-10 h-10 text-primary-foreground" />
-            </div>
-            <DialogTitle className="font-display text-2xl mb-3">
-              Payment Coming Soon!
-            </DialogTitle>
-            <DialogDescription className="text-base leading-relaxed">
-              We're working hard on integrating secure payment gateways to make your shopping experience seamless. Check back soon!
-            </DialogDescription>
-            <Button 
-              className="mt-6 rounded-full px-8"
-              onClick={() => setIsCheckoutModalOpen(false)}
-            >
-              Got it!
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
 
       {/* Footer */}
       <footer className="border-t border-border py-10 mt-16 bg-card/50">

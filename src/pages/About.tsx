@@ -6,7 +6,7 @@ import { Testimonials } from "@/components/landing/Testimonials";
 import { CTA } from "@/components/landing/CTA";
 import { Footer } from "@/components/landing/Footer";
 
-const Index = () => {
+const About = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -20,4 +20,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default About;
