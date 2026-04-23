@@ -253,7 +253,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
             {statCards.map((stat) => (
               <Card
                 key={stat.label}
@@ -262,23 +262,23 @@ export default function Dashboard() {
                 <div
                   className={`absolute inset-0 bg-gradient-to-br ${stat.accent} opacity-0 group-hover:opacity-100 transition-opacity`}
                 />
-                <CardContent className="relative p-6">
-                  <div className="flex items-start justify-between mb-8">
-                    <div className="w-10 h-10 rounded-xl bg-background/80 border border-border/50 flex items-center justify-center">
-                      <stat.icon className="w-5 h-5 text-foreground" />
+                <CardContent className="relative p-4 md:p-6">
+                  <div className="flex items-start justify-between mb-6 md:mb-8">
+                    <div className="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-background/80 border border-border/50 flex items-center justify-center">
+                      <stat.icon className="w-4 h-4 md:w-5 md:h-5 text-foreground" />
                     </div>
                     <ArrowUpRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-foreground group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all" />
                   </div>
                   <div className="space-y-1">
-                    <div className="text-4xl font-display font-bold tracking-tight tabular-nums">
+                    <div className="text-2xl md:text-4xl font-display font-bold tracking-tight tabular-nums">
                       {loading ? (
                         <span className="inline-block w-12 h-8 bg-muted rounded-md animate-pulse" />
                       ) : (
                         stat.value
                       )}
                     </div>
-                    <div className="text-sm font-medium text-foreground">{stat.label}</div>
-                    <div className="text-xs text-muted-foreground">{stat.hint}</div>
+                    <div className="text-xs md:text-sm font-medium text-foreground">{stat.label}</div>
+                    <div className="text-[10px] md:text-xs text-muted-foreground">{stat.hint}</div>
                   </div>
                 </CardContent>
               </Card>
@@ -439,7 +439,7 @@ export default function Dashboard() {
           </div>
 
           {loading ? (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
               {[1, 2, 3, 4].map((i) => (
                 <div key={i} className="h-48 bg-muted/50 rounded-2xl animate-pulse" />
               ))}
@@ -463,7 +463,7 @@ export default function Dashboard() {
               </CardContent>
             </Card>
           ) : (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
               {recentProducts.map((product) => (
                 <Link
                   key={product.id}
@@ -511,25 +511,25 @@ export default function Dashboard() {
             <p className="text-sm text-muted-foreground mt-1">Jump back into your workflow.</p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
             {quickLinks.map((link) => (
               <Link
                 key={link.to}
                 to={link.to}
-                className="group relative overflow-hidden rounded-2xl border border-border/50 bg-card/60 backdrop-blur p-5 hover:bg-card hover:border-border hover:shadow-soft transition-all duration-300"
+                className="group relative overflow-hidden rounded-2xl border border-border/50 bg-card/60 backdrop-blur p-4 md:p-5 hover:bg-card hover:border-border hover:shadow-soft transition-all duration-300"
               >
-                <div className="flex items-start gap-4">
-                  <div className="w-11 h-11 rounded-xl bg-secondary/60 border border-border/40 flex items-center justify-center shrink-0 group-hover:bg-primary/10 group-hover:border-primary/30 transition-colors">
-                    <link.icon className="w-5 h-5 text-foreground" />
+                <div className="flex items-start gap-3 md:gap-4">
+                  <div className="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-secondary/60 border border-border/40 flex items-center justify-center shrink-0 group-hover:bg-primary/10 group-hover:border-primary/30 transition-colors">
+                    <link.icon className="w-4 h-4 md:w-5 md:h-5 text-foreground" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-2">
-                      <h4 className="font-display font-semibold text-foreground">
+                      <h4 className="font-display font-semibold text-foreground text-sm md:text-base leading-tight">
                         {link.title}
                       </h4>
-                      <ArrowRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
+                      <ArrowRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-primary group-hover:translate-x-0.5 transition-all shrink-0" />
                     </div>
-                    <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
+                    <p className="text-xs md:text-sm text-muted-foreground mt-1 leading-relaxed line-clamp-2">
                       {link.description}
                     </p>
                   </div>
@@ -550,7 +550,7 @@ export default function Dashboard() {
             </p>
           </div>
 
-          <div className="grid sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
             {tips.map((tip) => (
               <Card
                 key={tip.title}
