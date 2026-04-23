@@ -11,7 +11,6 @@ import {
   Tag,
   Megaphone,
   HelpCircle,
-  Sparkles,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { Logo } from "@/components/Logo";
@@ -119,8 +118,8 @@ export function DashboardSidebar() {
         {!collapsed && (
           <div className="mx-3 mt-4 mb-2 rounded-2xl border border-border/50 bg-gradient-to-br from-primary/10 via-accent/5 to-transparent p-4">
             <div className="flex items-center gap-2 mb-2">
-              <div className="w-7 h-7 rounded-lg bg-gradient-accent flex items-center justify-center">
-                <Sparkles className="w-3.5 h-3.5 text-primary-foreground" />
+              <div className="w-7 h-7 rounded-lg bg-background flex items-center justify-center border border-border/40">
+                <Logo size="sm" showText={false} className="[&>div]:w-5 [&>div]:h-5" />
               </div>
               <span className="text-sm font-display font-semibold">Upgrade to Pro</span>
             </div>

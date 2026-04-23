@@ -8,11 +8,10 @@ import {
   Info,
   LogIn,
   LayoutDashboard,
-  Sparkles,
 } from "lucide-react";
+import { Logo } from "@/components/Logo";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Logo } from "@/components/Logo";
 import { cn } from "@/lib/utils";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/hooks/useAuth";
@@ -124,7 +123,7 @@ export function MarketplaceMobileNav() {
             <div className="p-4 border-t border-border/40">
               <Button asChild className="w-full rounded-full h-11" onClick={() => setMenuOpen(false)}>
                 <Link to={user ? "/dashboard" : "/auth?mode=signup&seller=1"}>
-                  <Sparkles className="w-4 h-4 mr-2" />
+                  <Logo size="sm" showText={false} className="mr-2 [&>div]:w-4 [&>div]:h-4" />
                   Sell on Trunt
                 </Link>
               </Button>
