@@ -58,6 +58,7 @@ export default function Stores() {
     const { data, error } = await supabase
       .from("stores")
       .select("id, name, description, created_at, slug, currency")
+      .eq("user_id", user.id)
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -292,7 +293,7 @@ export default function Stores() {
             </CardContent>
           </Card>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
             {stores.map((store) => (
               <Card key={store.id} className="bg-card/80 border-border/50 rounded-2xl hover:shadow-card transition-all group">
                 <CardHeader>
