@@ -1,8 +1,9 @@
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Sparkles, ArrowLeft, type LucideIcon } from "lucide-react";
+import { ArrowLeft, type LucideIcon } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Logo } from "@/components/Logo";
 
 interface ComingSoonProps {
   title: string;
@@ -22,7 +23,7 @@ export function ComingSoon({ title, description, icon: Icon, features }: ComingS
 
           <CardContent className="relative p-8 md:p-12">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-background/60 backdrop-blur border border-border/50 text-xs font-medium text-muted-foreground mb-6">
-              <Sparkles className="w-3.5 h-3.5 text-primary" />
+              <Logo size="sm" showText={false} className="[&>div]:w-3.5 [&>div]:h-3.5" />
               Coming soon
             </div>
 

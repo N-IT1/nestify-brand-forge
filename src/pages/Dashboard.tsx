@@ -10,7 +10,7 @@ import {
   TrendingUp,
   Plus,
   ArrowUpRight,
-  Sparkles,
+  ImageIcon,
   FolderOpen,
   Settings as SettingsIcon,
   ArrowRight,
@@ -182,7 +182,7 @@ export default function Dashboard() {
       body: "Lead with the benefit, then the feature. Keep it under 60 characters.",
     },
     {
-      icon: Sparkles,
+      icon: ImageIcon,
       title: "Add at least 3 high-quality photos",
       body: "Stores with multiple photos convert up to 2x better than single-image listings.",
     },
@@ -207,7 +207,7 @@ export default function Dashboard() {
 
           <div className="relative p-8 md:p-12">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-background/60 backdrop-blur border border-border/50 text-xs font-medium text-muted-foreground mb-6">
-              <Sparkles className="w-3.5 h-3.5 text-primary" />
+              <Logo size="sm" showText={false} className="[&>div]:w-3.5 [&>div]:h-3.5" />
               Welcome to Trunt
             </div>
             <h2 className="text-4xl md:text-5xl font-display font-bold tracking-tight text-foreground mb-3">

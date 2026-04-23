@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { Logo } from "@/components/Logo";
 
 export function Hero() {
   return (
@@ -16,7 +17,7 @@ export function Hero() {
         <div className="max-w-4xl mx-auto text-center">
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/80 backdrop-blur-sm border border-border/50 mb-8 animate-fade-up">
-            <Sparkles className="w-4 h-4 text-primary" />
+            <Logo size="sm" showText={false} className="!w-4 !h-4 [&>div]:w-4 [&>div]:h-4" />
             <span className="text-sm font-medium text-foreground">
               The cozy home for your online business
             </span>
