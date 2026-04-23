@@ -262,23 +262,23 @@ export default function Dashboard() {
                 <div
                   className={`absolute inset-0 bg-gradient-to-br ${stat.accent} opacity-0 group-hover:opacity-100 transition-opacity`}
                 />
-                <CardContent className="relative p-6">
-                  <div className="flex items-start justify-between mb-8">
-                    <div className="w-10 h-10 rounded-xl bg-background/80 border border-border/50 flex items-center justify-center">
-                      <stat.icon className="w-5 h-5 text-foreground" />
+                <CardContent className="relative p-4 md:p-6">
+                  <div className="flex items-start justify-between mb-6 md:mb-8">
+                    <div className="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-background/80 border border-border/50 flex items-center justify-center">
+                      <stat.icon className="w-4 h-4 md:w-5 md:h-5 text-foreground" />
                     </div>
                     <ArrowUpRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-foreground group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all" />
                   </div>
                   <div className="space-y-1">
-                    <div className="text-4xl font-display font-bold tracking-tight tabular-nums">
+                    <div className="text-2xl md:text-4xl font-display font-bold tracking-tight tabular-nums">
                       {loading ? (
                         <span className="inline-block w-12 h-8 bg-muted rounded-md animate-pulse" />
                       ) : (
                         stat.value
                       )}
                     </div>
-                    <div className="text-sm font-medium text-foreground">{stat.label}</div>
-                    <div className="text-xs text-muted-foreground">{stat.hint}</div>
+                    <div className="text-xs md:text-sm font-medium text-foreground">{stat.label}</div>
+                    <div className="text-[10px] md:text-xs text-muted-foreground">{stat.hint}</div>
                   </div>
                 </CardContent>
               </Card>
