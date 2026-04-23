@@ -1,9 +1,10 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { ShoppingCart, X, Minus, Plus, Package, Sparkles, Store as StoreIcon } from "lucide-react";
+import { ShoppingCart, X, Minus, Plus, Package, Store as StoreIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useCart, formatPrice, CartItem } from "@/contexts/CartContext";
+import { CheckoutModal } from "@/components/marketplace/CheckoutModal";
 
 export function CartDrawer() {
   const { items, isOpen, setIsOpen, updateQuantity, removeFromCart, totalCount } = useCart();
@@ -148,22 +149,7 @@ export function CartDrawer() {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={checkoutOpen} onOpenChange={setCheckoutOpen}>
-        <DialogContent className="sm:max-w-md rounded-3xl text-center">
-          <div className="flex flex-col items-center py-6">
-            <div className="w-20 h-20 rounded-full bg-gradient-accent flex items-center justify-center mb-6">
-              <Sparkles className="w-10 h-10 text-primary-foreground" />
-            </div>
-            <DialogTitle className="font-display text-2xl mb-3">Payment Coming Soon!</DialogTitle>
-            <DialogDescription className="text-base leading-relaxed">
-              We're working hard on integrating secure payment gateways to make your shopping experience seamless. Check back soon!
-            </DialogDescription>
-            <Button className="mt-6 rounded-full px-8" onClick={() => setCheckoutOpen(false)}>
-              Got it!
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <CheckoutModal open={checkoutOpen} onOpenChange={setCheckoutOpen} />
     </>
   );
 }
