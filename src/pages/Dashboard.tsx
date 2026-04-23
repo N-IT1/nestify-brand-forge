@@ -253,7 +253,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
             {statCards.map((stat) => (
               <Card
                 key={stat.label}
