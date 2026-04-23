@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { Logo } from "@/components/Logo";
-import { Logo } from "@/components/Logo";
 import { useAuth } from "@/hooks/useAuth";
 import {
   Sidebar,
