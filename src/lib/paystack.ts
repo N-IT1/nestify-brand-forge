@@ -15,6 +15,9 @@ interface PaystackPopOptions {
 
 interface PaystackPopInstance {
   newTransaction: (opts: PaystackPopOptions) => void;
+  resumeTransaction: (accessCode: string) => void;
+  onSuccess?: (transaction: { reference: string; status?: string; trans?: string; transaction?: string }) => void;
+  onCancel?: () => void;
 }
 
 declare global {
