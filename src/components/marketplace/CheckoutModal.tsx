@@ -8,7 +8,7 @@ import { useCart, formatPrice, CartItem } from "@/contexts/CartContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
-import { loadPaystackScript, PAYSTACK_PUBLIC_KEY } from "@/lib/paystack";
+import { loadPaystackScript } from "@/lib/paystack";
 
 interface Props {
   open: boolean;
@@ -90,11 +90,12 @@ export function CheckoutModal({ open, onOpenChange }: Props) {
         },
       });
 
-      if (error || !data?.reference) {
+      if (error || !data?.reference || !data?.access_code) {
         throw new Error(error?.message ?? data?.error ?? "Could not start payment");
       }
 
       const reference: string = data.reference;
+      const accessCode: string = data.access_code;
       setLastReference(reference);
 
       // 2. Open Paystack inline popup with the public key
@@ -105,43 +106,38 @@ export function CheckoutModal({ open, onOpenChange }: Props) {
       const popup = new PaystackPopAny();
       setStep("processing");
 
-      popup.newTransaction({
-        key: PAYSTACK_PUBLIC_KEY,
-        email,
-        amount: Math.round(total * 100),
-        currency,
-        ref: reference,
-        onSuccess: async (tx: { reference: string }) => {
-          // 3. Verify server-side
-          try {
-            const { data: verifyData, error: verifyErr } = await supabase.functions.invoke(
-              "paystack-verify",
-              { body: { reference: tx.reference } },
-            );
-            if (verifyErr || !verifyData?.success) {
-              throw new Error(verifyErr?.message ?? verifyData?.error ?? "Verification failed");
-            }
-            setStep("success");
-            clearCart();
-            toast({ title: "Payment successful", description: `Reference: ${tx.reference}` });
-          } catch (err) {
-            console.error(err);
-            toast({
-              title: "Could not verify payment",
-              description: (err as Error).message,
-              variant: "destructive",
-            });
-            setStep("details");
-          } finally {
-            setSubmitting(false);
+      popup.onSuccess = async (tx: { reference: string }) => {
+        try {
+          const { data: verifyData, error: verifyErr } = await supabase.functions.invoke(
+            "paystack-verify",
+            { body: { reference: tx.reference } },
+          );
+          if (verifyErr || !verifyData?.success) {
+            throw new Error(verifyErr?.message ?? verifyData?.error ?? "Verification failed");
           }
-        },
-        onCancel: () => {
-          setSubmitting(false);
+          setStep("success");
+          clearCart();
+          toast({ title: "Payment successful", description: `Reference: ${tx.reference}` });
+        } catch (err) {
+          console.error(err);
+          toast({
+            title: "Could not verify payment",
+            description: (err as Error).message,
+            variant: "destructive",
+          });
           setStep("details");
-          toast({ title: "Payment cancelled", description: "Your cart is still saved." });
-        },
-      });
+        } finally {
+          setSubmitting(false);
+        }
+      };
+
+      popup.onCancel = () => {
+        setSubmitting(false);
+        setStep("details");
+        toast({ title: "Payment cancelled", description: "Your cart is still saved." });
+      };
+
+      popup.resumeTransaction(accessCode);
     } catch (err) {
       console.error(err);
       toast({
