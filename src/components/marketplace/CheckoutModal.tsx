@@ -155,7 +155,7 @@ export function CheckoutModal({ open, onOpenChange }: Props) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={(o) => (submitting ? null : onOpenChange(o))}>
+    <Dialog modal={false} open={open} onOpenChange={(o) => (submitting ? null : onOpenChange(o))}>
       <DialogContent className="sm:max-w-lg rounded-3xl p-0 overflow-hidden">
         {step === "success" ? (
           <div className="p-8 flex flex-col items-center text-center">
