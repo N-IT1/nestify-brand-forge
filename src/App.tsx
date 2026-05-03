@@ -21,6 +21,10 @@ import Marketing from "./pages/dashboard/Marketing";
 import Help from "./pages/dashboard/Help";
 import Storefront from "./pages/Storefront";
 import StoresDirectory from "./pages/Stores";
+import AdminOverview from "./pages/admin/Overview";
+import AdminUsers from "./pages/admin/Users";
+import AdminStores from "./pages/admin/Stores";
+import AdminProducts from "./pages/admin/Products";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -49,6 +53,10 @@ const App = () => (
               <Route path="/dashboard/marketing" element={<Marketing />} />
               <Route path="/dashboard/help" element={<Help />} />
               <Route path="/dashboard/settings" element={<Settings />} />
+              <Route path="/admin" element={<AdminOverview />} />
+              <Route path="/admin/users" element={<AdminUsers />} />
+              <Route path="/admin/stores" element={<AdminStores />} />
+              <Route path="/admin/products" element={<AdminProducts />} />
               <Route path="/store/:slug" element={<Storefront />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

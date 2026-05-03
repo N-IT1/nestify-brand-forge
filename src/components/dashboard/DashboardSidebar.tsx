@@ -11,10 +11,12 @@ import {
   Tag,
   Megaphone,
   HelpCircle,
+  ShieldCheck,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { Logo } from "@/components/Logo";
 import { useAuth } from "@/hooks/useAuth";
+import { useIsAdmin } from "@/hooks/useIsAdmin";
 import {
   Sidebar,
   SidebarContent,
@@ -68,6 +70,7 @@ const menuGroups = [
 export function DashboardSidebar() {
   const { state } = useSidebar();
   const { user, signOut } = useAuth();
+  const { isAdmin } = useIsAdmin();
   const collapsed = state === "collapsed";
 
   const initials =
@@ -114,6 +117,34 @@ export function DashboardSidebar() {
             </SidebarGroupContent>
           </SidebarGroup>
         ))}
+
+        {isAdmin && (
+          <SidebarGroup>
+            <SidebarGroupLabel
+              className={`text-[11px] font-medium uppercase tracking-wider text-muted-foreground/70 ${
+                collapsed ? "sr-only" : ""
+              }`}
+            >
+              Platform
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild tooltip="Admin">
+                    <NavLink
+                      to="/admin"
+                      className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-primary/10 hover:text-primary transition-all"
+                      activeClassName="bg-primary/15 text-primary font-medium shadow-sm"
+                    >
+                      <ShieldCheck className="w-5 h-5 shrink-0" />
+                      {!collapsed && <span>Admin</span>}
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
 
         {!collapsed && (
           <div className="mx-3 mt-4 mb-2 rounded-2xl border border-border/50 bg-gradient-to-br from-primary/10 via-accent/5 to-transparent p-4">
