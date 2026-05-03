@@ -11,10 +11,12 @@ import {
   Tag,
   Megaphone,
   HelpCircle,
+  ShieldCheck,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { Logo } from "@/components/Logo";
 import { useAuth } from "@/hooks/useAuth";
+import { useIsAdmin } from "@/hooks/useIsAdmin";
 import {
   Sidebar,
   SidebarContent,
@@ -68,6 +70,7 @@ const menuGroups = [
 export function DashboardSidebar() {
   const { state } = useSidebar();
   const { user, signOut } = useAuth();
+  const { isAdmin } = useIsAdmin();
   const collapsed = state === "collapsed";
 
   const initials =
