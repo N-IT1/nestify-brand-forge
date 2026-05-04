@@ -4,33 +4,33 @@ import { Card, CardContent } from "@/components/ui/card";
 const features = [
   {
     icon: Store,
-    title: "Easy Store Builder",
-    description: "Create your online store in minutes with our intuitive drag-and-drop builder. No coding required.",
+    title: "A Store, Not a Template",
+    description: "Launch a storefront that reflects your brand — clean, fast, and built to convert from day one.",
   },
   {
     icon: Package,
-    title: "Product Management",
-    description: "Add, organize, and track your products effortlessly. Manage inventory with ease.",
+    title: "Effortless Catalogue",
+    description: "Manage products, variants, and inventory in one calm interface. No spreadsheets, no chaos.",
   },
   {
     icon: Palette,
-    title: "Beautiful Themes",
-    description: "Choose from stunning themes that make your store stand out. Customize colors and fonts.",
+    title: "Considered Design",
+    description: "Typography, spacing, and palettes that feel intentional. Your customers notice the difference.",
   },
   {
     icon: TrendingUp,
-    title: "Growth Analytics",
-    description: "Track your sales, visitors, and growth with insightful dashboards and reports.",
+    title: "Insight That Matters",
+    description: "Honest numbers on what's selling, what's stalling, and where to invest next.",
   },
   {
     icon: Shield,
-    title: "Secure & Reliable",
-    description: "Your store is protected with enterprise-grade security and 99.9% uptime guarantee.",
+    title: "Trust by Default",
+    description: "Verified vendors, secure payments, and zero tolerance for fraud — protecting you and your buyers.",
   },
   {
     icon: Zap,
-    title: "Lightning Fast",
-    description: "Optimized for speed. Your customers enjoy a smooth, fast shopping experience.",
+    title: "Built for Speed",
+    description: "Pages load in moments. Checkout is frictionless. Every millisecond is a sale earned.",
   },
 ];
 
@@ -39,12 +39,15 @@ export function Features() {
     <section id="features" className="py-24 bg-secondary/30">
       <div className="container mx-auto px-4">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <h2 className="text-4xl md:text-5xl font-display font-bold text-foreground mb-4">
-            Everything You Need to{" "}
-            <span className="text-gradient">Succeed</span>
+          <span className="inline-block text-xs font-semibold tracking-[0.2em] uppercase text-primary mb-4">
+            The Platform
+          </span>
+          <h2 className="text-4xl md:text-5xl font-display font-bold text-foreground mb-4 tracking-tight">
+            Built for retailers who{" "}
+            <span className="text-gradient">mean business.</span>
           </h2>
-          <p className="text-lg text-muted-foreground">
-            Powerful features wrapped in simplicity. Build, launch, and grow your online store with confidence.
+          <p className="text-lg text-muted-foreground leading-relaxed">
+            Every feature is here because a real merchant asked for it. Nothing more, nothing decorative.
           </p>
         </div>
 

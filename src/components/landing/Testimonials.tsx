@@ -5,20 +5,20 @@ import { Star } from "lucide-react";
 const testimonials = [
   {
     name: "Sarah Mitchell",
-    role: "Handmade Jewelry Store",
-    content: "Trunt made it so easy to launch my jewelry store. I went from idea to selling in just one afternoon. The whole experience felt seamless and professional.",
+    role: "Founder, Atelier Jewelry",
+    content: "I'd been quoting prices in DMs for two years. Within a weekend on Trunt, I had a real storefront — and a customer who paid before I'd even said hello.",
     initials: "SM",
   },
   {
     name: "Marcus Chen",
-    role: "Vintage Collectibles",
-    content: "As someone who's not tech-savvy, I was amazed at how intuitive everything is. My store looks professional and my customers love shopping here.",
+    role: "Owner, Heritage Collectibles",
+    content: "It looks like something I'd have paid an agency for. The difference is, I built it myself in an afternoon and I own every pixel of it.",
     initials: "MC",
   },
   {
     name: "Emma Rodriguez",
-    role: "Organic Skincare",
-    content: "The support team is incredible—they really care about helping you succeed. My business has grown 300% since switching to Trunt!",
+    role: "Founder, Linnea Skincare",
+    content: "Trunt feels considered. Not bloated, not gimmicky. It's the first platform that actually respects how small businesses operate.",
     initials: "ER",
   },
 ];
@@ -28,12 +28,15 @@ export function Testimonials() {
     <section id="testimonials" className="py-24 bg-secondary/30">
       <div className="container mx-auto px-4">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <h2 className="text-4xl md:text-5xl font-display font-bold text-foreground mb-4">
-            Loved by{" "}
-            <span className="text-gradient">Entrepreneurs</span>
+          <span className="inline-block text-xs font-semibold tracking-[0.2em] uppercase text-primary mb-4">
+            In Their Words
+          </span>
+          <h2 className="text-4xl md:text-5xl font-display font-bold text-foreground mb-4 tracking-tight">
+            Trusted by retailers{" "}
+            <span className="text-gradient">building seriously.</span>
           </h2>
-          <p className="text-lg text-muted-foreground">
-            Join thousands of happy store owners who've found their perfect home for business.
+          <p className="text-lg text-muted-foreground leading-relaxed">
+            Independent founders. Honest reviews. Real stores making real sales.
           </p>
         </div>
 

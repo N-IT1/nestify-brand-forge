@@ -17,13 +17,13 @@ export function CTA() {
             <Leaf className="w-8 h-8 text-primary-foreground" />
           </div>
 
-          <h2 className="text-4xl md:text-5xl font-display font-bold text-foreground mb-6">
-            Ready to Hatch Your{" "}
-            <span className="text-gradient">Success Story?</span>
+          <h2 className="text-4xl md:text-5xl font-display font-bold text-foreground mb-6 tracking-tight">
+            Your storefront is{" "}
+            <span className="text-gradient">a click away.</span>
           </h2>
 
-          <p className="text-xl text-muted-foreground mb-10 max-w-xl mx-auto">
-            Join thousands of entrepreneurs who've built thriving businesses with Trunt. Your journey starts here.
+          <p className="text-lg text-muted-foreground mb-10 max-w-xl mx-auto leading-relaxed">
+            Stop quoting in DMs. Start selling on a platform you fully own — built for retailers who are ready to be taken seriously.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

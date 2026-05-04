@@ -18,20 +18,20 @@ export function Hero() {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/80 backdrop-blur-sm border border-border/50 mb-8 animate-fade-up">
             <Logo size="sm" showText={false} className="!w-4 !h-4 [&>div]:w-4 [&>div]:h-4" />
-            <span className="text-sm font-medium text-foreground">
-              The cozy home for your online business
+            <span className="text-sm font-medium text-foreground tracking-wide">
+              Commerce, refined for the modern retailer
             </span>
           </div>
 
           {/* Main heading */}
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-display font-bold text-foreground mb-6 animate-fade-up" style={{ animationDelay: "0.1s" }}>
-            Build Your Nest.{" "}
-            <span className="text-gradient">Grow Your Business.</span>
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-display font-bold text-foreground mb-6 animate-fade-up tracking-tight" style={{ animationDelay: "0.1s" }}>
+            A storefront{" "}
+            <span className="text-gradient">you actually own.</span>
           </h1>
 
           {/* Subheading */}
-          <p className="text-xl md:text-2xl text-muted-foreground mb-10 max-w-2xl mx-auto animate-fade-up" style={{ animationDelay: "0.2s" }}>
-            Create a beautiful online store in minutes. Trunt is where ideas become successful businesses—simple, powerful, and designed for growth.
+          <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto animate-fade-up leading-relaxed" style={{ animationDelay: "0.2s" }}>
+            Trunt replaces the "DM for price" hustle with a professional, automated online store — built in minutes, owned for life.
           </p>
 
           {/* CTA Buttons */}
