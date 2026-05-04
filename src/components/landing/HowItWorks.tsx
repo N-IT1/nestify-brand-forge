@@ -4,20 +4,20 @@ const steps = [
   {
     icon: UserPlus,
     step: "01",
-    title: "Create Your Account",
-    description: "Sign up in seconds and get access to your personal dashboard. No credit card required.",
+    title: "Claim your space",
+    description: "Create your account and secure your storefront URL. A few details, no card required.",
   },
   {
     icon: Layers,
     step: "02",
-    title: "Build Your Store",
-    description: "Add your products, customize your theme, and set up your brand. It's as easy as pie.",
+    title: "Shape your store",
+    description: "Upload your catalogue, set your prices, and tailor the look to match your brand.",
   },
   {
     icon: Rocket,
     step: "03",
-    title: "Launch & Grow",
-    description: "Go live with one click and start selling. Watch your business take flight!",
+    title: "Open for business",
+    description: "Publish your store, share one link, and start taking orders with confidence.",
   },
 ];
 
@@ -26,12 +26,15 @@ export function HowItWorks() {
     <section id="how-it-works" className="py-24 bg-background">
       <div className="container mx-auto px-4">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <h2 className="text-4xl md:text-5xl font-display font-bold text-foreground mb-4">
-            Simple Steps to{" "}
-            <span className="text-gradient">Your Success</span>
+          <span className="inline-block text-xs font-semibold tracking-[0.2em] uppercase text-primary mb-4">
+            How It Works
+          </span>
+          <h2 className="text-4xl md:text-5xl font-display font-bold text-foreground mb-4 tracking-tight">
+            From idea to{" "}
+            <span className="text-gradient">first order.</span>
           </h2>
-          <p className="text-lg text-muted-foreground">
-            Getting started is a breeze. Follow these three simple steps and you'll be selling in no time.
+          <p className="text-lg text-muted-foreground leading-relaxed">
+            Three deliberate steps. No setup fees, no developer required.
           </p>
         </div>
 

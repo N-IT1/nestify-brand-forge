@@ -3,6 +3,7 @@ import { Hero } from "@/components/landing/Hero";
 import { Features } from "@/components/landing/Features";
 import { HowItWorks } from "@/components/landing/HowItWorks";
 import { Testimonials } from "@/components/landing/Testimonials";
+import { FounderLetter } from "@/components/landing/FounderLetter";
 import { CTA } from "@/components/landing/CTA";
 import { Footer } from "@/components/landing/Footer";
 import { MarketplaceMobileNav } from "@/components/marketplace/MarketplaceMobileNav";
@@ -15,6 +16,7 @@ const About = () => {
       <Features />
       <HowItWorks />
       <Testimonials />
+      <FounderLetter />
       <CTA />
       <Footer />
       <MarketplaceMobileNav />
