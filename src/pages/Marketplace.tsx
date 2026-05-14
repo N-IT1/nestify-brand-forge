@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Package, Store as StoreIcon, ArrowRight, ShieldCheck, Truck, Tag } from "lucide-react";
+import { Loader2, Package, Store as StoreIcon, ArrowRight, ShieldCheck, Truck, Tag, ShoppingCart, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
