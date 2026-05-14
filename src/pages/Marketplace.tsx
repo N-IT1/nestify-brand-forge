@@ -276,13 +276,13 @@ export default function Marketplace() {
                         {p.stores.name}
                       </Link>
                     )}
-                    <div className="mt-auto pt-3 flex items-center justify-between gap-2">
-                      <span className="text-base md:text-lg font-bold text-foreground">
+                    <div className="mt-auto pt-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                      <span className="text-sm sm:text-base md:text-lg font-bold text-foreground">
                         {formatPrice(p.price, p.stores?.currency ?? "NGN")}
                       </span>
                       <Button
                         size="sm"
-                        className="rounded-full h-9 px-3 text-xs shadow-sm"
+                        className="rounded-full h-9 px-3 text-xs sm:text-sm shadow-sm w-full sm:w-auto"
                         onClick={() => handleAdd(p)}
                       >
                         <ShoppingCart className="w-3.5 h-3.5 mr-1" />
