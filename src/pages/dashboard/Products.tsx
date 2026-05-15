@@ -69,22 +69,33 @@ export default function Products() {
     }
 
     setLoading(true);
-    const [productsResult, storesResult] = await Promise.all([
-      supabase
-        .from("products")
-        .select("id, name, description, price, inventory_count, is_active, store_id, image_url, stores(name)")
-        .order("created_at", { ascending: false }),
-      supabase.from("stores").select("id, name").order("name"),
-    ]);
-
-    if (productsResult.error) {
-      toast({ title: "Error loading products", description: productsResult.error.message, variant: "destructive" });
-    } else {
-      setProducts(productsResult.data || []);
-    }
+    const storesResult = await supabase
+      .from("stores")
+      .select("id, name")
+      .eq("user_id", user.id)
+      .order("name");
 
     if (storesResult.data) {
       setStores(storesResult.data);
+      
+      const storeIds = storesResult.data.map(store => store.id);
+      if (storeIds.length > 0) {
+        const productsResult = await supabase
+          .from("products")
+          .select("id, name, description, price, inventory_count, is_active, store_id, image_url, stores(name)")
+          .in("store_id", storeIds)
+          .order("created_at", { ascending: false });
+
+        if (productsResult.error) {
+          toast({ title: "Error loading products", description: productsResult.error.message, variant: "destructive" });
+        } else {
+          setProducts(productsResult.data || []);
+        }
+      } else {
+        setProducts([]);
+      }
+    } else {
+      setProducts([]);
     }
 
     setLoading(false);
