@@ -218,43 +218,49 @@ export default function Dashboard() {
 
   return (
     <DashboardLayout title="Dashboard">
-      <div className="max-w-6xl mx-auto space-y-10">
-        {/* Hero / Welcome */}
-        <section className="relative overflow-hidden rounded-3xl border border-border/50 bg-card">
-          <div className="absolute inset-0 bg-gradient-accent opacity-[0.08]" />
-          <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-primary/10 blur-3xl" />
-          <div className="absolute -bottom-32 -left-16 w-96 h-96 rounded-full bg-accent/10 blur-3xl" />
+      <div className="max-w-6xl mx-auto space-y-8 md:space-y-10">
+        {/* Hero / Welcome — premium, wide rectangular card */}
+        <section className="relative overflow-hidden rounded-2xl md:rounded-[28px] border border-border/60 bg-card shadow-soft">
+          {/* Inset frame for that "padded border" feel */}
+          <div className="pointer-events-none absolute inset-[6px] md:inset-2 rounded-[18px] md:rounded-[22px] border border-border/30" />
+          <div className="absolute inset-0 bg-gradient-accent opacity-[0.07]" />
+          <div className="absolute -top-32 -right-20 w-80 h-80 rounded-full bg-primary/10 blur-3xl" />
+          <div className="absolute -bottom-32 -left-20 w-80 h-80 rounded-full bg-accent/10 blur-3xl" />
 
-          <div className="relative p-8 md:p-12">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-background/60 backdrop-blur border border-border/50 text-xs font-medium text-muted-foreground mb-6">
-              <Logo size="sm" showText={false} className="[&>div]:w-3.5 [&>div]:h-3.5" />
-              Welcome to Trunt
-            </div>
-            <h2 className="text-4xl md:text-5xl font-display font-bold tracking-tight text-foreground mb-3">
-              Hi {firstName}.
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-xl">
-              Here's a quick look at your business today. Let's keep building.
-            </p>
+          <div className="relative px-5 py-7 sm:px-8 sm:py-8 md:px-14 md:py-12">
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 md:gap-10">
+              <div className="min-w-0 flex-1">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-background/70 backdrop-blur border border-border/50 text-[11px] font-medium text-muted-foreground mb-5 md:mb-6">
+                  <Logo size="sm" showText={false} className="[&>div]:w-3.5 [&>div]:h-3.5" />
+                  Welcome to Trunt
+                </div>
+                <h2 className="text-[28px] leading-tight sm:text-4xl md:text-5xl font-display font-bold tracking-tight text-foreground mb-2 md:mb-3">
+                  Hi {firstName}.
+                </h2>
+                <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-xl">
+                  Here's a quiet look at your business today. Keep building, one small step at a time.
+                </p>
+              </div>
 
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Button asChild size="lg" className="rounded-full shadow-soft">
-                <Link to="/dashboard/stores">
-                  <Plus className="w-4 h-4" />
-                  New store
-                </Link>
-              </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="rounded-full bg-background/50 backdrop-blur"
-              >
-                <Link to="/dashboard/products">
-                  View products
-                  <ArrowUpRight className="w-4 h-4" />
-                </Link>
-              </Button>
+              <div className="flex flex-wrap gap-2.5 md:gap-3 md:shrink-0">
+                <Button asChild size="lg" className="rounded-full shadow-soft h-11 px-5">
+                  <Link to="/dashboard/stores">
+                    <Plus className="w-4 h-4" />
+                    New store
+                  </Link>
+                </Button>
+                <Button
+                  asChild
+                  size="lg"
+                  variant="outline"
+                  className="rounded-full bg-background/60 backdrop-blur h-11 px-5"
+                >
+                  <Link to="/dashboard/products">
+                    View products
+                    <ArrowUpRight className="w-4 h-4" />
+                  </Link>
+                </Button>
+              </div>
             </div>
           </div>
         </section>
