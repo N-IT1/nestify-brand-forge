@@ -1,12 +1,30 @@
 import { useEffect, useState } from "react";
 import { AdminLayout } from "@/components/admin/AdminLayout";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Loader2, Trash2, ExternalLink } from "lucide-react";
+import { Loader2, Trash2, ExternalLink, Search, MoreHorizontal, Store } from "lucide-react";
 
 interface StoreRow {
   id: string;
@@ -22,6 +40,8 @@ export default function AdminStores() {
   const [rows, setRows] = useState<StoreRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [q, setQ] = useState("");
+  const [storeToDelete, setStoreToDelete] = useState<StoreRow | null>(null);
+  const [busyId, setBusyId] = useState<string | null>(null);
 
   const load = async () => {
     setLoading(true);
@@ -47,10 +67,12 @@ export default function AdminStores() {
   }, []);
 
   const deleteStore = async (id: string) => {
-    if (!confirm("Delete this store and all its products? This cannot be undone.")) return;
+    setBusyId(id);
     const { error } = await supabase.from("stores").delete().eq("id", id);
+    setBusyId(null);
     if (error) return toast.error(error.message);
     toast.success("Store deleted");
+    setStoreToDelete(null);
     load();
   };
 
@@ -66,56 +88,104 @@ export default function AdminStores() {
 
   return (
     <AdminLayout title="Stores">
-      <div className="space-y-4">
-        <Input
-          placeholder="Search by name, slug or owner email"
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          className="max-w-sm rounded-full"
-        />
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="relative w-full sm:max-w-md">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              placeholder="Search by name, slug or owner email..."
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              className="pl-9 bg-card border-border/40 shadow-sm rounded-full h-10"
+            />
+          </div>
+        </div>
         {loading ? (
           <div className="flex justify-center py-20">
             <Loader2 className="w-6 h-6 animate-spin text-primary" />
           </div>
         ) : (
-          <div className="grid gap-3">
-            {filtered.map((r) => (
-              <Card key={r.id} className="rounded-2xl border-border/50">
-                <CardContent className="p-4 flex flex-wrap items-center gap-3">
+          <Card className="rounded-2xl border-border/40 shadow-sm overflow-hidden bg-card/60 backdrop-blur-sm">
+            <div className="divide-y divide-border/40">
+              {filtered.map((r) => (
+                <div key={r.id} className="p-4 flex flex-col sm:flex-row sm:items-center gap-4 hover:bg-muted/30 transition-colors">
+                  <Avatar className="w-10 h-10 bg-amber-500/10 text-amber-600 border border-amber-500/20 shrink-0 hidden sm:flex">
+                    <AvatarFallback className="bg-transparent font-medium">
+                      {r.name ? r.name[0].toUpperCase() : <Store className="w-5 h-5" />}
+                    </AvatarFallback>
+                  </Avatar>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <p className="font-medium truncate">{r.name}</p>
-                      <Badge variant="secondary">{r.currency}</Badge>
-                      {r.slug && <Badge variant="outline">/{r.slug}</Badge>}
+                    <div className="flex items-center gap-2 flex-wrap mb-1">
+                      <p className="font-semibold truncate text-foreground">
+                        {r.name}
+                      </p>
+                      <Badge variant="secondary" className="text-[10px] h-5 px-1.5 rounded-sm border-0 bg-muted/50 text-muted-foreground font-medium">
+                        {r.currency}
+                      </Badge>
+                      {r.slug && (
+                        <Badge variant="outline" className="text-[10px] h-5 px-1.5 rounded-sm border-border/50 text-muted-foreground font-medium">
+                          /{r.slug}
+                        </Badge>
+                      )}
                     </div>
                     <p className="text-sm text-muted-foreground truncate">
                       Owner: {r.ownerEmail || r.user_id}
                     </p>
                   </div>
-                  {r.slug && (
-                    <Button asChild variant="outline" size="sm" className="rounded-full">
-                      <a href={`/store/${r.slug}`} target="_blank" rel="noreferrer">
-                        <ExternalLink className="w-4 h-4" /> View
-                      </a>
-                    </Button>
-                  )}
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    className="rounded-full"
-                    onClick={() => deleteStore(r.id)}
-                  >
-                    <Trash2 className="w-4 h-4" /> Delete
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-            {filtered.length === 0 && (
-              <p className="text-center text-muted-foreground py-12">No stores found.</p>
-            )}
-          </div>
+                  <div className="flex items-center gap-2 sm:ml-auto">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full" disabled={busyId === r.id}>
+                          {busyId === r.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <MoreHorizontal className="w-4 h-4" />}
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-48 rounded-xl shadow-lg border-border/40 p-1">
+                        {r.slug && (
+                          <DropdownMenuItem asChild className="rounded-lg cursor-pointer flex items-center gap-2">
+                            <a href={`/store/${r.slug}`} target="_blank" rel="noreferrer">
+                              <ExternalLink className="w-4 h-4" /> View Store
+                            </a>
+                          </DropdownMenuItem>
+                        )}
+                        <DropdownMenuSeparator className="bg-border/40" />
+                        <DropdownMenuItem
+                          onClick={() => setStoreToDelete(r)}
+                          className="rounded-lg cursor-pointer text-destructive focus:text-destructive flex items-center gap-2"
+                        >
+                          <Trash2 className="w-4 h-4" /> Delete Store
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </div>
+              ))}
+              {filtered.length === 0 && (
+                <div className="text-center text-muted-foreground py-16 flex flex-col items-center justify-center">
+                  <Store className="w-8 h-8 mb-3 opacity-20" />
+                  <p>No stores found matching your search.</p>
+                </div>
+              )}
+            </div>
+          </Card>
         )}
       </div>
+
+      <AlertDialog open={!!storeToDelete} onOpenChange={(open) => !open && setStoreToDelete(null)}>
+        <AlertDialogContent className="rounded-2xl border-border/50">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete this store?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This permanently removes the store "{storeToDelete?.name}" and all of its associated products. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="rounded-full">Cancel</AlertDialogCancel>
+            <AlertDialogAction className="rounded-full bg-destructive hover:bg-destructive/90" onClick={() => storeToDelete && deleteStore(storeToDelete.id)}>
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </AdminLayout>
   );
 }

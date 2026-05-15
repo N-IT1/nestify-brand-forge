@@ -12,6 +12,20 @@ import { Footer } from "@/components/landing/Footer";
 import { useCart, formatPrice, CartProduct } from "@/contexts/CartContext";
 import { useAuth } from "@/hooks/useAuth";
 
+interface StoreData {
+  id: string;
+  name: string;
+  slug: string | null;
+  description: string | null;
+  logo_url: string | null;
+  theme_color: string | null;
+}
+
+interface CategoryData {
+  name: string;
+  stores: StoreData;
+}
+
 interface MarketplaceProduct {
   id: string;
   name: string;
@@ -30,6 +44,7 @@ export default function Marketplace() {
   const { addToCart } = useCart();
   const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState<MarketplaceProduct[]>([]);
+  const [allCategories, setAllCategories] = useState<CategoryData[]>([]);
   const [categoryNames, setCategoryNames] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [search, setSearch] = useState(searchParams.get("q") ?? "");
@@ -38,28 +53,37 @@ export default function Marketplace() {
   useEffect(() => {
     async function load() {
       setLoading(true);
-      const { data, error } = await supabase
-        .from("products")
-        .select(
-          "id, name, description, price, image_url, inventory_count, category_id, store_id, categories(name), stores!inner(id, name, slug, currency)"
-        )
-        .eq("is_active", true)
-        .gt("inventory_count", 0)
-        .not("stores.slug", "is", null)
-        .order("created_at", { ascending: false })
-        .limit(200);
+      
+      const [productsResult, categoriesResult] = await Promise.all([
+        supabase
+          .from("products")
+          .select(
+            "id, name, description, price, image_url, inventory_count, category_id, store_id, categories(name), stores!inner(id, name, slug, currency)"
+          )
+          .eq("is_active", true)
+          .gt("inventory_count", 0)
+          .not("stores.slug", "is", null)
+          .order("created_at", { ascending: false })
+          .limit(200),
+        supabase.from("categories").select("name, stores!inner(id, name, slug, description, logo_url, theme_color)").not("stores.slug", "is", null)
+      ]);
 
-      if (!error && data) {
-        setProducts(data as unknown as MarketplaceProduct[]);
+      if (!productsResult.error && productsResult.data) {
+        setProducts(productsResult.data as unknown as MarketplaceProduct[]);
+      }
+      
+      if (!categoriesResult.error && categoriesResult.data) {
+        setAllCategories(categoriesResult.data as unknown as CategoryData[]);
         const names = Array.from(
           new Set(
-            (data as unknown as MarketplaceProduct[])
-              .map((p) => p.categories?.name)
+            categoriesResult.data
+              .map((c) => c.name)
               .filter((n): n is string => Boolean(n))
           )
         ).sort();
         setCategoryNames(names);
       }
+
       setLoading(false);
     }
     load();
@@ -73,6 +97,30 @@ export default function Marketplace() {
     setSearchParams(next, { replace: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
+
+  const filteredStores = useMemo(() => {
+    if (!selectedCategory && !search) return [];
+    
+    const q = search.trim().toLowerCase();
+    const matchingStoresMap = new Map<string, StoreData>();
+    
+    allCategories.forEach(cat => {
+      let matches = false;
+      if (selectedCategory && cat.name === selectedCategory) {
+        matches = true;
+      } else if (!selectedCategory && q) {
+        if (cat.name.toLowerCase().includes(q) || cat.stores?.name.toLowerCase().includes(q)) {
+          matches = true;
+        }
+      }
+      
+      if (matches && cat.stores && cat.stores.slug) {
+        matchingStoresMap.set(cat.stores.id, cat.stores);
+      }
+    });
+    
+    return Array.from(matchingStoresMap.values());
+  }, [allCategories, search, selectedCategory]);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -201,7 +249,7 @@ export default function Marketplace() {
           <div className="flex items-center justify-center py-32">
             <Loader2 className="w-8 h-8 animate-spin text-primary" />
           </div>
-        ) : filtered.length === 0 ? (
+        ) : filtered.length === 0 && filteredStores.length === 0 ? (
           <Card className="bg-card border-border/50 rounded-3xl shadow-soft">
             <CardContent className="flex flex-col items-center justify-center py-20">
               <div className="w-20 h-20 rounded-full bg-secondary flex items-center justify-center mb-6">
@@ -223,17 +271,66 @@ export default function Marketplace() {
           </Card>
         ) : (
           <>
-            <div className="flex items-center justify-between mb-5">
-              <h2 className="text-lg md:text-xl font-semibold text-foreground">
-                {selectedCategory ? selectedCategory : "All Products"}
-              </h2>
-              <p className="text-sm text-muted-foreground">
-                {filtered.length} {filtered.length === 1 ? "item" : "items"}
-              </p>
-            </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-5">
-              {filtered.map((p) => (
-                <Card
+            {filteredStores.length > 0 && (
+              <div className="mb-10">
+                <div className="flex items-center justify-between mb-5">
+                  <h2 className="text-lg md:text-xl font-semibold text-foreground">
+                    Stores {selectedCategory ? `in ${selectedCategory}` : 'Found'}
+                  </h2>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                  {filteredStores.map((s) => (
+                    <Link
+                      key={s.id}
+                      to={s.slug ? `/store/${s.slug}` : "#"}
+                      className="group"
+                    >
+                      <Card className="bg-card border-0 rounded-2xl overflow-hidden shadow-soft hover:shadow-card transition-all duration-300 h-full">
+                        <div
+                          className="h-24 bg-gradient-accent"
+                          style={s.theme_color ? { background: s.theme_color } : undefined}
+                        />
+                        <CardContent className="p-5 -mt-10">
+                          <div className="w-16 h-16 rounded-2xl bg-card border-4 border-card shadow-soft flex items-center justify-center overflow-hidden">
+                            {s.logo_url ? (
+                              <img src={s.logo_url} alt={s.name} className="w-full h-full object-cover" />
+                            ) : (
+                              <StoreIcon className="w-7 h-7 text-muted-foreground" />
+                            )}
+                          </div>
+                          <h3 className="mt-3 font-display font-bold text-lg group-hover:text-primary transition-colors">
+                            {s.name}
+                          </h3>
+                          {s.description && (
+                            <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
+                              {s.description}
+                            </p>
+                          )}
+                          <div className="mt-4 inline-flex items-center text-sm font-medium text-primary">
+                            Visit store
+                            <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-0.5 transition-transform" />
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {filtered.length > 0 && (
+              <>
+                <div className="flex items-center justify-between mb-5">
+                  <h2 className="text-lg md:text-xl font-semibold text-foreground">
+                    {selectedCategory ? `${selectedCategory} Products` : "All Products"}
+                  </h2>
+                  <p className="text-sm text-muted-foreground">
+                    {filtered.length} {filtered.length === 1 ? "item" : "items"}
+                  </p>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-5">
+                  {filtered.map((p) => (
+                    <Card
                   key={p.id}
                   className="bg-card border-0 rounded-2xl overflow-hidden shadow-soft hover:shadow-card transition-all duration-300 group flex flex-col"
                 >
@@ -293,6 +390,8 @@ export default function Marketplace() {
                 </Card>
               ))}
             </div>
+              </>
+            )}
           </>
         )}
       </main>

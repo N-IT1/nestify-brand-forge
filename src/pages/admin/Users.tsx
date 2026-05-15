@@ -4,6 +4,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,7 +26,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
-import { Loader2, ShieldCheck, ShieldOff, Ban, CircleCheck, Trash2 } from "lucide-react";
+import { Loader2, ShieldCheck, ShieldOff, Ban, CircleCheck, Trash2, Search, MoreHorizontal, User } from "lucide-react";
 
 interface ProfileRow {
   id: string;
@@ -35,6 +43,7 @@ export default function AdminUsers() {
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [q, setQ] = useState("");
+  const [userToDelete, setUserToDelete] = useState<ProfileRow | null>(null);
 
   const load = async () => {
     setLoading(true);
@@ -109,6 +118,7 @@ export default function AdminUsers() {
       return toast.error(error?.message || (data as any)?.error || "Failed to delete user");
     }
     toast.success("User deleted");
+    setUserToDelete(null);
     load();
   };
 
@@ -119,94 +129,111 @@ export default function AdminUsers() {
 
   return (
     <AdminLayout title="Users">
-      <div className="space-y-4">
-        <Input
-          placeholder="Search by name or email"
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          className="max-w-sm rounded-full"
-        />
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="relative w-full sm:max-w-md">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              placeholder="Search users by name or email..."
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              className="pl-9 bg-card border-border/40 shadow-sm rounded-full h-10"
+            />
+          </div>
+        </div>
         {loading ? (
           <div className="flex justify-center py-20">
             <Loader2 className="w-6 h-6 animate-spin text-primary" />
           </div>
         ) : (
-          <div className="grid gap-3">
-            {filtered.map((r) => (
-              <Card key={r.id} className="rounded-2xl border-border/50">
-                <CardContent className="p-4 flex flex-wrap items-center gap-3">
+          <Card className="rounded-2xl border-border/40 shadow-sm overflow-hidden bg-card/60 backdrop-blur-sm">
+            <div className="divide-y divide-border/40">
+              {filtered.map((r) => (
+                <div key={r.id} className="p-4 flex flex-col sm:flex-row sm:items-center gap-4 hover:bg-muted/30 transition-colors">
+                  <Avatar className="w-10 h-10 bg-primary/10 text-primary border border-primary/20 shrink-0 hidden sm:flex">
+                    <AvatarFallback className="bg-transparent font-medium">
+                      {r.full_name ? r.full_name[0].toUpperCase() : <User className="w-5 h-5" />}
+                    </AvatarFallback>
+                  </Avatar>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <p className="font-medium truncate">{r.full_name || "—"}</p>
+                    <div className="flex items-center gap-2 flex-wrap mb-1">
+                      <p className="font-semibold truncate text-foreground">
+                        {r.full_name || "Unknown User"}
+                      </p>
                       {r.isAdmin && (
-                        <Badge variant="default" className="gap-1">
+                        <Badge variant="default" className="text-[10px] h-5 px-1.5 gap-1 rounded-sm bg-primary/15 text-primary border-0 hover:bg-primary/20 shadow-none font-medium">
                           <ShieldCheck className="w-3 h-3" /> Admin
                         </Badge>
                       )}
                       {r.suspended && (
-                        <Badge variant="destructive" className="gap-1">
+                        <Badge variant="destructive" className="text-[10px] h-5 px-1.5 gap-1 rounded-sm border-0 shadow-none font-medium bg-destructive/15 text-destructive">
                           <Ban className="w-3 h-3" /> Suspended
                         </Badge>
                       )}
                     </div>
                     <p className="text-sm text-muted-foreground truncate">{r.email}</p>
                   </div>
-                  <div className="flex flex-wrap gap-2">
-                    <Button
-                      variant={r.isAdmin ? "outline" : "default"}
-                      size="sm"
-                      className="rounded-full"
-                      disabled={busyId === r.id}
-                      onClick={() => toggleAdmin(r)}
-                    >
-                      {r.isAdmin ? (
-                        <><ShieldOff className="w-4 h-4" /> Revoke</>
-                      ) : (
-                        <><ShieldCheck className="w-4 h-4" /> Make admin</>
-                      )}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="rounded-full"
-                      disabled={busyId === r.id}
-                      onClick={() => toggleSuspend(r)}
-                    >
-                      {r.suspended ? (
-                        <><CircleCheck className="w-4 h-4" /> Reactivate</>
-                      ) : (
-                        <><Ban className="w-4 h-4" /> Suspend</>
-                      )}
-                    </Button>
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button variant="destructive" size="sm" className="rounded-full" disabled={busyId === r.id}>
-                          <Trash2 className="w-4 h-4" /> Delete
+                  <div className="flex items-center gap-2 sm:ml-auto">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full" disabled={busyId === r.id}>
+                          {busyId === r.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <MoreHorizontal className="w-4 h-4" />}
                         </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>Delete this user?</AlertDialogTitle>
-                          <AlertDialogDescription>
-                            This permanently removes {r.email || "the user"} and all of their data. This cannot be undone.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction onClick={() => deleteUser(r)}>Delete</AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-48 rounded-xl shadow-lg border-border/40 p-1">
+                        <DropdownMenuItem onClick={() => toggleAdmin(r)} className="rounded-lg cursor-pointer flex items-center gap-2">
+                          {r.isAdmin ? (
+                            <><ShieldOff className="w-4 h-4" /> Revoke admin</>
+                          ) : (
+                            <><ShieldCheck className="w-4 h-4" /> Make admin</>
+                          )}
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => toggleSuspend(r)} className="rounded-lg cursor-pointer flex items-center gap-2">
+                          {r.suspended ? (
+                            <><CircleCheck className="w-4 h-4" /> Reactivate user</>
+                          ) : (
+                            <><Ban className="w-4 h-4" /> Suspend user</>
+                          )}
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator className="bg-border/40" />
+                        <DropdownMenuItem
+                          onClick={() => setUserToDelete(r)}
+                          className="rounded-lg cursor-pointer text-destructive focus:text-destructive flex items-center gap-2"
+                        >
+                          <Trash2 className="w-4 h-4" /> Delete user
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
-            {filtered.length === 0 && (
-              <p className="text-center text-muted-foreground py-12">No users found.</p>
-            )}
-          </div>
+                </div>
+              ))}
+              {filtered.length === 0 && (
+                <div className="text-center text-muted-foreground py-16 flex flex-col items-center justify-center">
+                  <User className="w-8 h-8 mb-3 opacity-20" />
+                  <p>No users found matching your search.</p>
+                </div>
+              )}
+            </div>
+          </Card>
         )}
       </div>
+
+      <AlertDialog open={!!userToDelete} onOpenChange={(open) => !open && setUserToDelete(null)}>
+        <AlertDialogContent className="rounded-2xl border-border/50">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete this user?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This permanently removes {userToDelete?.email || "the user"} and all of their associated data from the platform. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="rounded-full">Cancel</AlertDialogCancel>
+            <AlertDialogAction className="rounded-full bg-destructive hover:bg-destructive/90" onClick={() => userToDelete && deleteUser(userToDelete)}>
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </AdminLayout>
   );
 }

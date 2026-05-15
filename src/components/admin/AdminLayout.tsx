@@ -190,16 +190,21 @@ export function AdminLayout({ children, title }: AdminLayoutProps) {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-background">
+      <div className="min-h-screen flex w-full bg-background/50">
         <AdminSidebar />
-        <SidebarInset className="flex-1">
-          <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b border-border/50 bg-background/80 backdrop-blur-md px-6">
-            <SidebarTrigger className="-ml-2" />
-            {title && (
-              <h1 className="text-xl font-display font-bold text-foreground">{title}</h1>
-            )}
+        <SidebarInset className="flex-1 bg-muted/10">
+          <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-border/40 bg-background/60 backdrop-blur-xl px-6">
+            <div className="flex items-center gap-4">
+              <SidebarTrigger className="-ml-2" />
+              {title && (
+                <div className="flex items-center gap-2">
+                  <div className="h-4 w-1 rounded-full bg-primary/80" />
+                  <h1 className="text-xl font-display font-semibold text-foreground tracking-tight">{title}</h1>
+                </div>
+              )}
+            </div>
           </header>
-          <main className="flex-1 p-4 md:p-6">{children}</main>
+          <main className="flex-1 p-4 md:p-8 max-w-7xl mx-auto w-full">{children}</main>
         </SidebarInset>
       </div>
     </SidebarProvider>
