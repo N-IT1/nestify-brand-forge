@@ -61,22 +61,41 @@ export default function Dashboard() {
       }
 
       setLoading(true);
-      const [storesCount, productsCount, categoriesCount, storesList, productsList] =
-        await Promise.all([
-          supabase.from("stores").select("id", { count: "exact", head: true }),
-          supabase.from("products").select("id", { count: "exact", head: true }),
-          supabase.from("categories").select("id", { count: "exact", head: true }),
-          supabase
-            .from("stores")
-            .select("id, name, slug, created_at, currency")
-            .order("created_at", { ascending: false })
-            .limit(3),
-          supabase
-            .from("products")
-            .select("id, name, price, image_url, is_active, created_at")
-            .order("created_at", { ascending: false })
-            .limit(4),
-        ]);
+
+      // Get the user's stores first; everything else is scoped to those stores.
+      const { data: userStores } = await supabase
+        .from("stores")
+        .select("id, name, slug, created_at, currency")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
+
+      const storeIds = (userStores || []).map((s) => s.id);
+
+      const [productsCount, categoriesCount, productsList] = await Promise.all([
+        storeIds.length
+          ? supabase
+              .from("products")
+              .select("id", { count: "exact", head: true })
+              .in("store_id", storeIds)
+          : Promise.resolve({ count: 0 } as any),
+        storeIds.length
+          ? supabase
+              .from("categories")
+              .select("id", { count: "exact", head: true })
+              .in("store_id", storeIds)
+          : Promise.resolve({ count: 0 } as any),
+        storeIds.length
+          ? supabase
+              .from("products")
+              .select("id, name, price, image_url, is_active, created_at")
+              .in("store_id", storeIds)
+              .order("created_at", { ascending: false })
+              .limit(4)
+          : Promise.resolve({ data: [] } as any),
+      ]);
+
+      const storesCount = { count: userStores?.length || 0 };
+      const storesList = { data: (userStores || []).slice(0, 3) };
 
       setStats({
         stores: storesCount.count || 0,
