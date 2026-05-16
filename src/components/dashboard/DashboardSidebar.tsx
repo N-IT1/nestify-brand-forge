@@ -157,8 +157,18 @@ export function DashboardSidebar() {
             <p className="text-xs text-muted-foreground leading-relaxed mb-3">
               Unlock advanced analytics, custom domains, and more.
             </p>
-            <Button size="sm" className="w-full rounded-full text-xs h-8">
-              Coming soon
+            <Button
+              size="sm"
+              className="w-full rounded-full text-xs h-8"
+              asChild
+            >
+              <a
+                href="https://recurrra.com/plans-hub/887b47d5-47fc-4b97-ad3e-5b380c1b0174"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View plans
+              </a>
             </Button>
           </div>
         )}
