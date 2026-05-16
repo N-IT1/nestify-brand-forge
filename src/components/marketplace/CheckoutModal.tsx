@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import { Loader2, Lock, ShieldCheck, CheckCircle2, Mail, CreditCard } from "lucide-react";
+import { Loader2, Lock, ShieldCheck, CheckCircle2, Mail, CreditCard, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useCart, formatPrice, CartItem } from "@/contexts/CartContext";
@@ -21,6 +22,12 @@ export function CheckoutModal({ open, onOpenChange }: Props) {
   const { items, clearCart } = useCart();
   const { user } = useAuth();
   const [email, setEmail] = useState(user?.email ?? "");
+  const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [addressLine, setAddressLine] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [notes, setNotes] = useState("");
   const [step, setStep] = useState<Step>("details");
   const [submitting, setSubmitting] = useState(false);
   const [lastReference, setLastReference] = useState<string | null>(null);
@@ -61,6 +68,14 @@ export function CheckoutModal({ open, onOpenChange }: Props) {
       toast({ title: "Email required", description: "Enter a valid email so we can send your receipt.", variant: "destructive" });
       return;
     }
+    if (!fullName.trim() || !phone.trim() || !addressLine.trim() || !city.trim() || !state.trim()) {
+      toast({
+        title: "Delivery address required",
+        description: "Please fill in your full name, phone, and delivery address so the seller can ship your order.",
+        variant: "destructive",
+      });
+      return;
+    }
     if (mixedCurrencies) {
       toast({
         title: "Mixed currencies in cart",
@@ -80,6 +95,14 @@ export function CheckoutModal({ open, onOpenChange }: Props) {
           amount: total,
           currency,
           metadata: {
+            delivery: {
+              full_name: fullName.trim(),
+              phone: phone.trim(),
+              address: addressLine.trim(),
+              city: city.trim(),
+              state: state.trim(),
+              notes: notes.trim() || undefined,
+            },
             cart: items.map((i) => ({
               product_id: i.product.id,
               name: i.product.name,
@@ -227,6 +250,62 @@ export function CheckoutModal({ open, onOpenChange }: Props) {
                     disabled={submitting}
                   />
                 </div>
+              </div>
+
+              <div className="space-y-3 pt-2 border-t border-border/40">
+                <div className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-primary" />
+                  <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    Delivery address
+                  </Label>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <Input
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    placeholder="Full name"
+                    className="h-11 rounded-xl"
+                    disabled={submitting}
+                  />
+                  <Input
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="Phone number"
+                    type="tel"
+                    className="h-11 rounded-xl"
+                    disabled={submitting}
+                  />
+                </div>
+                <Input
+                  value={addressLine}
+                  onChange={(e) => setAddressLine(e.target.value)}
+                  placeholder="Street address"
+                  className="h-11 rounded-xl"
+                  disabled={submitting}
+                />
+                <div className="grid grid-cols-2 gap-3">
+                  <Input
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    placeholder="City"
+                    className="h-11 rounded-xl"
+                    disabled={submitting}
+                  />
+                  <Input
+                    value={state}
+                    onChange={(e) => setState(e.target.value)}
+                    placeholder="State / Region"
+                    className="h-11 rounded-xl"
+                    disabled={submitting}
+                  />
+                </div>
+                <Textarea
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  placeholder="Delivery notes (optional) — landmarks, gate code, etc."
+                  className="rounded-xl min-h-[60px] resize-none"
+                  disabled={submitting}
+                />
               </div>
 
               <div className="flex items-center justify-between pt-2">

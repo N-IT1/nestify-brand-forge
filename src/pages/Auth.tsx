@@ -10,7 +10,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { Logo } from "@/components/Logo";
-import { Loader2, ArrowLeft } from "lucide-react";
+import { Loader2, ArrowLeft, Sparkles, ExternalLink } from "lucide-react";
+
+const RECURRA_PLANS_URL = "https://recurrra.com/plans-hub/887b47d5-47fc-4b97-ad3e-5b380c1b0174";
 
 const signInSchema = z.object({
   email: z.string().trim().email("Please enter a valid email address"),
@@ -140,7 +142,17 @@ export default function Auth() {
 
           <CardContent className="pt-6">
             {isSignUp ? (
-              <Form {...signUpForm} key="signup-form">
+              <>
+                <div className="mb-5 rounded-2xl border border-primary/20 bg-primary/5 p-4">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Sparkles className="w-4 h-4 text-primary" />
+                    <p className="text-sm font-semibold text-foreground">1 month free trial</p>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Create your account today and explore Trunt free for 30 days — no card required.
+                  </p>
+                </div>
+                <Form {...signUpForm} key="signup-form">
                 <form onSubmit={signUpForm.handleSubmit(handleSignUp)} className="space-y-4">
                   <FormField
                     control={signUpForm.control}
@@ -205,7 +217,29 @@ export default function Auth() {
                     )}
                   </Button>
                 </form>
-              </Form>
+                </Form>
+
+                <div className="mt-4 space-y-2">
+                  <a
+                    href={RECURRA_PLANS_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full"
+                  >
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full h-12 rounded-xl text-base border-primary/30 hover:bg-primary/5"
+                    >
+                      View Trunt Plans
+                      <ExternalLink className="ml-2 h-4 w-4" />
+                    </Button>
+                  </a>
+                  <p className="text-[11px] text-center text-muted-foreground">
+                    After your free trial, choose a plan on our secure Recurrra page.
+                  </p>
+                </div>
+              </>
             ) : (
               <Form {...signInForm} key="signin-form">
                 <form onSubmit={signInForm.handleSubmit(handleSignIn)} className="space-y-4">
