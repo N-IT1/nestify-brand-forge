@@ -68,6 +68,14 @@ export function CheckoutModal({ open, onOpenChange }: Props) {
       toast({ title: "Email required", description: "Enter a valid email so we can send your receipt.", variant: "destructive" });
       return;
     }
+    if (!fullName.trim() || !phone.trim() || !addressLine.trim() || !city.trim() || !state.trim()) {
+      toast({
+        title: "Delivery address required",
+        description: "Please fill in your full name, phone, and delivery address so the seller can ship your order.",
+        variant: "destructive",
+      });
+      return;
+    }
     if (mixedCurrencies) {
       toast({
         title: "Mixed currencies in cart",
@@ -87,6 +95,14 @@ export function CheckoutModal({ open, onOpenChange }: Props) {
           amount: total,
           currency,
           metadata: {
+            delivery: {
+              full_name: fullName.trim(),
+              phone: phone.trim(),
+              address: addressLine.trim(),
+              city: city.trim(),
+              state: state.trim(),
+              notes: notes.trim() || undefined,
+            },
             cart: items.map((i) => ({
               product_id: i.product.id,
               name: i.product.name,
