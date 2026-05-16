@@ -142,7 +142,17 @@ export default function Auth() {
 
           <CardContent className="pt-6">
             {isSignUp ? (
-              <Form {...signUpForm} key="signup-form">
+              <>
+                <div className="mb-5 rounded-2xl border border-primary/20 bg-primary/5 p-4">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Sparkles className="w-4 h-4 text-primary" />
+                    <p className="text-sm font-semibold text-foreground">1 month free trial</p>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Create your account today and explore Trunt free for 30 days — no card required.
+                  </p>
+                </div>
+                <Form {...signUpForm} key="signup-form">
                 <form onSubmit={signUpForm.handleSubmit(handleSignUp)} className="space-y-4">
                   <FormField
                     control={signUpForm.control}
