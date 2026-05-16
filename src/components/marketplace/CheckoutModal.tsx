@@ -22,6 +22,12 @@ export function CheckoutModal({ open, onOpenChange }: Props) {
   const { items, clearCart } = useCart();
   const { user } = useAuth();
   const [email, setEmail] = useState(user?.email ?? "");
+  const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [addressLine, setAddressLine] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [notes, setNotes] = useState("");
   const [step, setStep] = useState<Step>("details");
   const [submitting, setSubmitting] = useState(false);
   const [lastReference, setLastReference] = useState<string | null>(null);
