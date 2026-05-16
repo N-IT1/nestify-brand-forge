@@ -252,6 +252,62 @@ export function CheckoutModal({ open, onOpenChange }: Props) {
                 </div>
               </div>
 
+              <div className="space-y-3 pt-2 border-t border-border/40">
+                <div className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-primary" />
+                  <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    Delivery address
+                  </Label>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <Input
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    placeholder="Full name"
+                    className="h-11 rounded-xl"
+                    disabled={submitting}
+                  />
+                  <Input
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="Phone number"
+                    type="tel"
+                    className="h-11 rounded-xl"
+                    disabled={submitting}
+                  />
+                </div>
+                <Input
+                  value={addressLine}
+                  onChange={(e) => setAddressLine(e.target.value)}
+                  placeholder="Street address"
+                  className="h-11 rounded-xl"
+                  disabled={submitting}
+                />
+                <div className="grid grid-cols-2 gap-3">
+                  <Input
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    placeholder="City"
+                    className="h-11 rounded-xl"
+                    disabled={submitting}
+                  />
+                  <Input
+                    value={state}
+                    onChange={(e) => setState(e.target.value)}
+                    placeholder="State / Region"
+                    className="h-11 rounded-xl"
+                    disabled={submitting}
+                  />
+                </div>
+                <Textarea
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  placeholder="Delivery notes (optional) — landmarks, gate code, etc."
+                  className="rounded-xl min-h-[60px] resize-none"
+                  disabled={submitting}
+                />
+              </div>
+
               <div className="flex items-center justify-between pt-2">
                 <span className="text-sm text-muted-foreground">Total to pay</span>
                 <span className="text-2xl font-bold font-display tabular-nums">
