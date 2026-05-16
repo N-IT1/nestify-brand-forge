@@ -60,22 +60,34 @@ export default function Categories() {
     }
 
     setLoading(true);
-    const [categoriesResult, storesResult] = await Promise.all([
-      supabase
-        .from("categories")
-        .select("id, name, description, store_id, stores(name)")
-        .order("name"),
-      supabase.from("stores").select("id, name").order("name"),
-    ]);
+
+    const storesResult = await supabase
+      .from("stores")
+      .select("id, name")
+      .eq("user_id", user.id)
+      .order("name");
+
+    const userStores = storesResult.data || [];
+    setStores(userStores);
+
+    const storeIds = userStores.map((s) => s.id);
+
+    if (storeIds.length === 0) {
+      setCategories([]);
+      setLoading(false);
+      return;
+    }
+
+    const categoriesResult = await supabase
+      .from("categories")
+      .select("id, name, description, store_id, stores(name)")
+      .in("store_id", storeIds)
+      .order("name");
 
     if (categoriesResult.error) {
       toast({ title: "Error loading categories", description: categoriesResult.error.message, variant: "destructive" });
     } else {
       setCategories(categoriesResult.data || []);
-    }
-
-    if (storesResult.data) {
-      setStores(storesResult.data);
     }
 
     setLoading(false);
