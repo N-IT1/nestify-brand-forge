@@ -10,7 +10,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { Logo } from "@/components/Logo";
-import { Loader2, ArrowLeft } from "lucide-react";
+import { Loader2, ArrowLeft, Sparkles, ExternalLink } from "lucide-react";
+
+const RECURRA_PLANS_URL = "https://recurrra.com/plans-hub/887b47d5-47fc-4b97-ad3e-5b380c1b0174";
 
 const signInSchema = z.object({
   email: z.string().trim().email("Please enter a valid email address"),
