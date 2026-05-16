@@ -217,7 +217,29 @@ export default function Auth() {
                     )}
                   </Button>
                 </form>
-              </Form>
+                </Form>
+
+                <div className="mt-4 space-y-2">
+                  <a
+                    href={RECURRA_PLANS_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full"
+                  >
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full h-12 rounded-xl text-base border-primary/30 hover:bg-primary/5"
+                    >
+                      View Trunt Plans
+                      <ExternalLink className="ml-2 h-4 w-4" />
+                    </Button>
+                  </a>
+                  <p className="text-[11px] text-center text-muted-foreground">
+                    After your free trial, choose a plan on our secure Recurrra page.
+                  </p>
+                </div>
+              </>
             ) : (
               <Form {...signInForm} key="signin-form">
                 <form onSubmit={signInForm.handleSubmit(handleSignIn)} className="space-y-4">
