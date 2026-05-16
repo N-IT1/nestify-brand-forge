@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import { Loader2, Lock, ShieldCheck, CheckCircle2, Mail, CreditCard } from "lucide-react";
+import { Loader2, Lock, ShieldCheck, CheckCircle2, Mail, CreditCard, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useCart, formatPrice, CartItem } from "@/contexts/CartContext";
